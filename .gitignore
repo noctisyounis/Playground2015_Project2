@@ -1,3 +1,4 @@
 *.sln
 *.csproj
 Library
+Temp
