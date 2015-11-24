@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BulletBehavior : MonoBehaviour
+public class WeaponBehavior : MonoBehaviour
 {
     #region Properties
     public float m_Speed = 3.0f;

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerBehavior : MonoBehaviour
+public class CharacterBehavior : MonoBehaviour
 {
 
     #region Public properties
@@ -26,7 +26,7 @@ public class PlayerBehavior : MonoBehaviour
     {
         m_CurrentPosition = transform.position;
 
-        InstantiateBullet();
+        Shoot();
         Move();
         Jump();
     }
@@ -35,7 +35,7 @@ public class PlayerBehavior : MonoBehaviour
 
     #region Utils
     // TODO : input DIRECTION ! (= player direction; left or right)
-    void InstantiateBullet()
+    void Shoot()
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {        
