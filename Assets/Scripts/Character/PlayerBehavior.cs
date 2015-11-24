@@ -39,7 +39,7 @@ public class PlayerBehavior : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {        
-            GameObject BulletPrefab = (GameObject)Instantiate(Resources.Load("prefabs/PrefabBullet"));
+            GameObject BulletPrefab = (GameObject)Instantiate(Resources.Load("prefabs/Character/PrefabBullet"));
             BulletPrefab.transform.position = m_CurrentPosition;
         }
     }
