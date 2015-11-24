@@ -3,18 +3,17 @@ using System.Collections;
 
 public class WeaponBehavior : MonoBehaviour
 {
-    #region Properties
-    public float m_Speed = 3.0f;
-    Rigidbody2D m_RigidB2D;
+    #region Public Properties    
+    
     #endregion
 
 
     #region Main methods
     void Start ()
     {
-        m_RigidB2D = GetComponent<Rigidbody2D>();
-        m_RigidB2D.velocity = Vector2.right * m_Speed;
-	}
+
+           
+    }
 
     void FixedUpdate()
     {
@@ -36,18 +35,25 @@ public class WeaponBehavior : MonoBehaviour
         {
             Destroy(gameObject);
             Destroy(other.gameObject);
-        }   
-    }
+        }
 
-    void OnCollisionEnter2D(Collision2D other)
-    {
         // Destroy the bullet if entering with "Ground"-tagged gameObject
         if (other.gameObject.CompareTag("Ground"))
         {
+            // Rewrite this = no collision with the character itself !
             Destroy(gameObject);
         }
     }
 
+    void OnCollisionEnter2D(Collision2D other)
+    {
+       
+
+    }
+
+    #endregion
+
+    #region Private Properties
     #endregion
 
 
