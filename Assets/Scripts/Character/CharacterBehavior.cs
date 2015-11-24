@@ -9,9 +9,11 @@ public class CharacterBehavior : MonoBehaviour
     public float m_MoveSpeed = 10.0f;
     public float m_JumpSpeed = 10.0f;
     public float m_ShootForce = 15.0f;
+
+    public Transform m_GroundCheck;
+    public LayerMask m_GroundLayer;
+
     #endregion
-
-
 
 
     #region Main methods
@@ -21,24 +23,27 @@ public class CharacterBehavior : MonoBehaviour
         m_FacingRight = true;
 	}
 
-    void Update()
-    {
-
-    }
+    //void Update()
+    //{
+    //
+    //}
 
 	void FixedUpdate ()
-    {
+    {  
+        m_IsGrounded = Physics2D.Linecast(transform.position, m_GroundCheck.position, m_GroundLayer);
+
+        Debug.Log("isGrounded" + m_IsGrounded);
+
+        // Display a visual ray
+        // Debug.DrawLine(transform.position, m_GroundCheck.position);
+
         m_CurrentPosition = transform.position;
 
         Shoot();
         Move();
-        Jump();
-        
+        Jump();       
     }
-    #endregion
 
-
-    #region Utils
     void Shoot()
     {
         // if RETURN is pressed down
@@ -82,12 +87,11 @@ public class CharacterBehavior : MonoBehaviour
 
     void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && m_RigidB2D.velocity.y == 0)
+        if (Input.GetKeyDown(KeyCode.Space) && m_RigidB2D.velocity.y == 0 && m_IsGrounded)
         {
             m_RigidB2D.velocity = (Vector2.up * m_JumpSpeed);
         }
     }
-
 
     private void Flip()
     {
@@ -98,20 +102,26 @@ public class CharacterBehavior : MonoBehaviour
         transform.localScale = CharacterScale;
     }
 
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        Debug.Log("collision");
+        //m_IsGrounded = (other.gameObject.CompareTag("Ground")) ? true : false;
+    }
 
+    #endregion
+
+    #region Utils
     void OnGUI()
     {
         GUILayout.Button("x: " + m_RigidB2D.velocity.x + " \n y:" + m_RigidB2D.velocity.y);
     }
     #endregion
 
-
-
     #region Private properties
-
     Vector3 m_CurrentPosition;
     Rigidbody2D m_RigidB2D;
     bool m_FacingRight;
+    bool m_IsGrounded;
     #endregion
 
 
