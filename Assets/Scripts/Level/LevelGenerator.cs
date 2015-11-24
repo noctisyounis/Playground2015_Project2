@@ -38,8 +38,8 @@ public class LevelGenerator : MonoBehaviour
 	
 	void Generate()
 	{
-		int x = 0;
-		int y = 0;
+		float x = 0;
+		float y = 0;
 		GameObject pattern;
 
 		for (int i = 0; i < arraySize; ++i) 
