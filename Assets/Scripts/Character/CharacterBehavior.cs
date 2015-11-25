@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets.Scripts.Character.enums;
 
 public class CharacterBehavior : MonoBehaviour
 {
@@ -13,7 +14,18 @@ public class CharacterBehavior : MonoBehaviour
     public Transform m_GroundCheck;
     public LayerMask m_GroundLayer;
 
+    public Ammo m_SelectedAmmo;
     #endregion
+
+
+
+    //      TODO :
+    //      Stop more longer walking when a non-stop shooting
+    //      Stop walking when jumping (just before), then jump
+    //      Stop sneaking when shooting/jumping
+    //      Fall gestion
+    //      Directionnal flip-bug
+
 
 
     #region Main methods
@@ -21,49 +33,81 @@ public class CharacterBehavior : MonoBehaviour
     {
         m_RigidB2D = GetComponent<Rigidbody2D>();
         m_FacingRight = true;
-	}
+        m_CanWalk = true;
+        m_SelectedAmmo = Ammo.DestroyWave;
+    }
 
-    //void Update()
-    //{
-    //
-    //}
 
-	void FixedUpdate ()
+
+    void FixedUpdate ()
     {  
         m_IsGrounded = Physics2D.Linecast(transform.position, m_GroundCheck.position, m_GroundLayer);
 
-        Debug.Log("isGrounded" + m_IsGrounded);
-
-        // Display a visual ray
+        // Display a visual ray on scene
         // Debug.DrawLine(transform.position, m_GroundCheck.position);
 
         m_CurrentPosition = transform.position;
 
-        Shoot();
         Move();
-        Jump();       
+        Jump();
+        SwitchAmmo();
+
+        StopCoroutine(Shoot(m_SelectedAmmo));
+        StartCoroutine(Shoot(m_SelectedAmmo));
     }
 
-    void Shoot()
+
+    void SwitchAmmo()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl))
+        {
+            if (m_SelectedAmmo == Ammo.DestroyWave)
+            {
+                m_SelectedAmmo = Ammo.PushWave;
+                Debug.Log("Switched to Push Wave");
+            }
+
+            else
+            {
+                m_SelectedAmmo = Ammo.DestroyWave;
+                Debug.Log("Switched to Destroy Wave");
+            }
+        }
+    }
+
+
+    IEnumerator Shoot(Ammo AmmoType)
     {
         // if RETURN is pressed down
-        if (Input.GetKeyDown(KeyCode.Return))
-        { 
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
+        {
+            // Disable walk
+            m_CanWalk = false;
             // Check the current character direction
             Vector2 ShootDirection = m_FacingRight ? Vector2.right : Vector2.left;
-            // Instantiate Destroy Wave prefab
-            GameObject DestroyWave = (GameObject)Instantiate(Resources.Load("prefabs/Character/DestroyWavePrefab"));
+            // Adapt prefab type and intantiate the wave
+            string PrefabName = (AmmoType == Ammo.DestroyWave) ? "DestroyWavePrefab" : "PushWavePrefab";
+            GameObject WavePrefab = (GameObject)Instantiate(Resources.Load("prefabs/Character/"+PrefabName));
             // Bullet position at the current character position        
-            DestroyWave.transform.position = m_CurrentPosition;
+            WavePrefab.transform.position = m_CurrentPosition;
             // Apply force and direction to the Wave velocity
-            DestroyWave.GetComponent<Rigidbody2D>().velocity = ShootDirection * m_ShootForce;
+            WavePrefab.GetComponent<Rigidbody2D>().velocity = ShootDirection * m_ShootForce;
+            // Delay
+            yield return new WaitForSeconds(1);
+            // After 1sec, destroy the Wave GameObject
+            Destroy(WavePrefab);
+            // Enable walk
+            m_CanWalk = true;
         }
     }
 
     void Move()
     {
-        float Axis = Input.GetAxisRaw(m_Axis);
-        m_RigidB2D.velocity = new Vector2(Axis, 0) * m_MoveSpeed;
+        if (m_CanWalk)
+        {
+            float Axis = Input.GetAxisRaw(m_Axis);
+            m_RigidB2D.velocity = new Vector2(Axis, 0) * m_MoveSpeed;
+        }
 
         // Without using velocity
         //if (Input.GetKey(KeyCode.RightArrow))
@@ -82,18 +126,18 @@ public class CharacterBehavior : MonoBehaviour
             m_FacingRight = true;
             Flip();
         }
-
     }
 
     void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && m_RigidB2D.velocity.y == 0 && m_IsGrounded)
+        // Jump only if SPACE is pressed down, if vertical velocity =0, and if character is on a grounded or on a platform
+        if ((Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.UpArrow)) && m_RigidB2D.velocity.y == 0 && m_IsGrounded)
         {
             m_RigidB2D.velocity = (Vector2.up * m_JumpSpeed);
         }
     }
 
-    private void Flip()
+    void Flip()
     {
         //m_FacingRight = !m_FacingRight;
 
@@ -102,11 +146,7 @@ public class CharacterBehavior : MonoBehaviour
         transform.localScale = CharacterScale;
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        Debug.Log("collision");
-        //m_IsGrounded = (other.gameObject.CompareTag("Ground")) ? true : false;
-    }
+
 
     #endregion
 
@@ -122,6 +162,8 @@ public class CharacterBehavior : MonoBehaviour
     Rigidbody2D m_RigidB2D;
     bool m_FacingRight;
     bool m_IsGrounded;
+    bool m_CanWalk;
+    
     #endregion
 
 
