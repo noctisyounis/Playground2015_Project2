@@ -1,8 +1,8 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Level\LevelGenerator.cs">
     <Files>
-      <File FileName="Assets\Scripts\Level\LevelGenerator.cs" Line="57" Column="46" />
+      <File FileName="Assets\Scripts\Level\LevelGenerator.cs" Line="86" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
