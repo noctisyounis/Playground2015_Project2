@@ -1,0 +1,155 @@
+fileFormatVersion: 2
+guid: d6f6a94ea8ec52f49b42e0d2557601f9
+timeCreated: 1448027746
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: CharacterHead
+    21300002: CharacterForearm
+    21300004: CharacterHand
+    21300006: CharacterLowerLeg
+    21300008: CharacterFoot
+    21300010: CharacterTrumpet
+    21300012: CharacterBody
+    21300014: CharacterArm
+    21300016: CharacterUpperLeg
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 300
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: CharacterHead
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 193
+        width: 79
+        height: 95
+      alignment: 9
+      pivot: {x: .50244534, y: .172618181}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: CharacterForearm
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 205
+        width: 19
+        height: 83
+      alignment: 9
+      pivot: {x: .581337392, y: .865404963}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: CharacterHand
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 153
+        width: 23
+        height: 40
+      alignment: 9
+      pivot: {x: .502746582, y: .73487854}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: CharacterLowerLeg
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 83
+        width: 15
+        height: 96
+      alignment: 9
+      pivot: {x: .541276038, y: .922421157}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: CharacterFoot
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 3
+        width: 47
+        height: 24
+      alignment: 9
+      pivot: {x: .163625196, y: .690301001}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: CharacterTrumpet
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 26
+        width: 117
+        height: 65
+      alignment: 9
+      pivot: {x: .445950031, y: .581075013}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: CharacterBody
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 91
+        width: 118
+        height: 101
+      alignment: 9
+      pivot: {x: .480901748, y: .168095887}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: CharacterArm
+      rect:
+        serializedVersion: 2
+        x: 156
+        y: 190
+        width: 18
+        height: 93
+      alignment: 9
+      pivot: {x: .489267975, y: .929971993}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: CharacterUpperLeg
+      rect:
+        serializedVersion: 2
+        x: 133
+        y: 33
+        width: 17
+        height: 89
+      alignment: 9
+      pivot: {x: .468061268, y: .894264817}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
