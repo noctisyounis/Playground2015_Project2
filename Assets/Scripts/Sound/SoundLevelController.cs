@@ -13,6 +13,12 @@ public class SoundLevelController : MonoBehaviour
 
     void Start ()
     {
+        m_HighPassFilter = m_AudioSource1.GetComponent<AudioHighPassFilter>();
+        m_HighPassFilter.cutoffFrequency = 600;
+
+        m_DistortionFilter = m_AudioSource1.GetComponent<AudioDistortionFilter>();
+        m_DistortionFilter.distortionLevel = 0.8f;
+
         m_AudioSource1.volume = 0.00f;
         m_AudioSource2.volume = 1.00f;
 
@@ -23,21 +29,33 @@ public class SoundLevelController : MonoBehaviour
 
     void FixedUpdate ()
     {
-        Balance(m_TotalCount,m_GrabbedCount);
+        Balance();
 	}
 
 
-    void Balance(float totalCount, float grabbedCount)
+    void Balance()
     {
-        float BalanceRate;
-        BalanceRate = grabbedCount / totalCount;
+        // Calcul percentage of items found
+        float BalancePercent = m_GrabbedCount / m_TotalCount;
 
-        m_AudioSource1.volume = 0.00f + BalanceRate;
-        m_AudioSource2.volume = 1.00f - BalanceRate;
+        // Ajust High Pass Filter
+        m_HighPassFilter.cutoffFrequency = 600 - (600 * BalancePercent);
+
+        // Ajust distortion level
+        m_DistortionFilter.distortionLevel = 0.8f - (0.8f * BalancePercent);
+
+        // Up the song volume
+        m_AudioSource1.volume = 0.00f + BalancePercent;
+        // Down the scratches volume
+        m_AudioSource2.volume = 1.00f - BalancePercent;
     }
 
 
+
+
     #region Private properties
+    AudioHighPassFilter m_HighPassFilter;
+    AudioDistortionFilter m_DistortionFilter;
     #endregion
 
 }
