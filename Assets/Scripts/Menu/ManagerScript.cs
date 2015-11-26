@@ -81,8 +81,15 @@ public class ManagerScript : MonoBehaviour
 				{	
 					if (framePopUp.name!="ButtonRejouerFinishMint")
 					{	framePopUp.SetActive (true);
-						
-						
+						if (framePopUp.name=="TextFinishPopUp")
+						{
+							framePopUp.GetComponent<Text>().text="Inaudible";
+						}
+						if (framePopUp.name=="TextLevelInProgressPopUp")
+						{
+							framePopUp.GetComponent<Text>().text="Niveau 1";
+							
+						}
 					}
 
 					if (framePopUp.name=="ButtonNiveauSuivant")
@@ -98,6 +105,15 @@ public class ManagerScript : MonoBehaviour
 				{	
 					if (framePopUp.name!="ButtonRejouerFinishMint")
 					{	framePopUp.SetActive (true);
+						if (framePopUp.name=="TextFinishPopUp")
+						{
+							framePopUp.GetComponent<Text>().text="Basse Qualité";
+						}
+						if (framePopUp.name=="TextLevelInProgressPopUp")
+						{
+							framePopUp.GetComponent<Text>().text="Niveau 1";
+							
+						}
 											
 					}
 
@@ -109,6 +125,15 @@ public class ManagerScript : MonoBehaviour
 				{	
 					if (framePopUp.name!="ButtonRejouerFinishMint")
 					{	framePopUp.SetActive (true);
+						if (framePopUp.name=="TextFinishPopUp")
+						{
+							framePopUp.GetComponent<Text>().text="Haute Qualité";
+						}
+						if (framePopUp.name=="TextLevelInProgressPopUp")
+						{
+							framePopUp.GetComponent<Text>().text="Niveau 1";
+							
+						}
 						
 					}
 
@@ -121,8 +146,17 @@ public class ManagerScript : MonoBehaviour
 
 					if (framePopUp.name!="ButtonCompleter")
 					{	framePopUp.SetActive (true);
+						if (framePopUp.name=="TextFinishPopUp")
+						{
+							framePopUp.GetComponent<Text>().text="Mint!";
 
-						//framePopUp.GetComponent<Text>().text="Rejouer";
+						}
+						if (framePopUp.name=="TextLevelInProgressPopUp")
+						{
+							framePopUp.GetComponent<Text>().text="Niveau 1";
+
+						}
+
 					}
 
 				}
