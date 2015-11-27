@@ -198,6 +198,9 @@ public class CharacterBehavior : MonoBehaviour
     bool m_CanWalk;
 
     
+
+
+    
     float m_FloorDistance;
     float m_MaxFloorDistance;
     #endregion
