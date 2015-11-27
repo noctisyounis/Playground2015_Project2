@@ -6,7 +6,9 @@ public class CharacterBehavior : MonoBehaviour
 {
 
     #region Public properties
+
     public string m_Axis;
+
     public float m_MoveSpeed = 10.0f;
     public float m_JumpSpeed = 150.0f;
     public float m_ShootForce = 15.0f;
@@ -15,18 +17,17 @@ public class CharacterBehavior : MonoBehaviour
     public LayerMask m_GroundLayer;
 
     public Ammo m_SelectedAmmo;
+
+    public float m_pv;
+
     #endregion
-
-
 
     //      TODO :
     //      Stop more longer walking when a non-stop shooting
     //      Stop walking when jumping (just before), then jump
-    //      Stop sneaking when shooting/jumping
     //      Fall gestion
     //      Directionnal flip-bug
-    //      Debug jump+shoot with RETURN
-
+    //      Debug jump+shoot with RETURN : max floor distance calcul !!
 
 
     #region Main methods
@@ -34,27 +35,24 @@ public class CharacterBehavior : MonoBehaviour
     {
         m_RigidB2D = GetComponent<Rigidbody2D>();
         m_FacingRight = true;
+        m_MaxFloorDistance = 2f;
         m_CanWalk = true;
         m_SelectedAmmo = Ammo.DestroyWave;
+        m_pv = 3f;
     }
 
-
-
     void FixedUpdate ()
-    {
-        
-
+    {       
         m_CurrentPosition = transform.position;
 
-        CheckGrounded();
+        CheckIfGrounded();
         Move();
         Jump();
         SwitchAmmo();
 
-        StopCoroutine(Shoot(m_SelectedAmmo));
-        StartCoroutine(Shoot(m_SelectedAmmo));
+        StopCoroutine(Shoot());
+        StartCoroutine(Shoot());
     }
-
 
     void SwitchAmmo()
     {
@@ -63,21 +61,19 @@ public class CharacterBehavior : MonoBehaviour
             if (m_SelectedAmmo == Ammo.DestroyWave)
             {
                 m_SelectedAmmo = Ammo.PushWave;
-                Debug.Log("Switched to Push Wave");
+                Debug.Log("Ammo switched to Push Wave");
             }
 
             else
             {
                 m_SelectedAmmo = Ammo.DestroyWave;
-                Debug.Log("Switched to Destroy Wave");
+                Debug.Log("Ammo switched to Destroy Wave");
             }
         }
     }
 
-
-    IEnumerator Shoot(Ammo AmmoType)
+    IEnumerator Shoot()
     {
-
         Vector3 ShootPosition = new Vector3(0, 0.8f, 0);
 
         // if RETURN is pressed down
@@ -88,10 +84,8 @@ public class CharacterBehavior : MonoBehaviour
             // Check the current character direction
             Vector2 ShootDirection = m_FacingRight ? Vector2.right : Vector2.left;
             // Adapt prefab type and intantiate the wave
-            string PrefabName = (AmmoType == Ammo.DestroyWave) ? "DestroyWavePrefab" : "PushWavePrefab";
-            
+            string PrefabName = (m_SelectedAmmo == Ammo.DestroyWave) ? "DestroyWavePrefab" : "PushWavePrefab";
             GameObject WavePrefab = (GameObject)Instantiate(Resources.Load("prefabs/Character/" + PrefabName));
-
             // Bullet position at the current character position    
             WavePrefab.transform.position = m_CurrentPosition + ShootPosition;
             Debug.Log("Position of instantiation : "+WavePrefab.transform.position);
@@ -114,12 +108,6 @@ public class CharacterBehavior : MonoBehaviour
             float Axis = Input.GetAxisRaw(m_Axis);
             m_RigidB2D.velocity = new Vector2(Axis, 0) * m_MoveSpeed;
         }
-
-        // Without using velocity
-        //if (Input.GetKey(KeyCode.RightArrow))
-        //{
-        //    transform.Translate(Vector2.right * Time.deltaTime);
-        //}
         
         if ((Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.Q)) && m_FacingRight)
         {
@@ -152,9 +140,9 @@ public class CharacterBehavior : MonoBehaviour
         transform.localScale = CharacterScale;
     }
 
-
-    void CheckGrounded()
+    void CheckIfGrounded()
     {
+        // Calcul a clipping compared to Center groundcheck
         Vector3 DecalPos = new Vector3(0.35f, 0, 0);
         Vector3 DecalNeg = new Vector3(-0.35f, 0, 0);
 
@@ -162,10 +150,10 @@ public class CharacterBehavior : MonoBehaviour
         m_IsGroundedRight = Physics2D.Linecast(transform.position + DecalPos, m_GroundCheck.position, m_GroundLayer);
         m_IsGroundedLeft = Physics2D.Linecast(transform.position + DecalNeg, m_GroundCheck.position, m_GroundLayer);
 
-        // Display rays on scene
-        Debug.DrawLine(transform.position, m_GroundCheck.position);
-        Debug.DrawLine(transform.position + DecalPos, m_GroundCheck.position + DecalPos);
-        Debug.DrawLine(transform.position + DecalNeg, m_GroundCheck.position + DecalNeg);
+        // --- Display rays on scene
+        // Debug.DrawLine(transform.position, m_GroundCheck.position);
+        // Debug.DrawLine(transform.position + DecalPos, m_GroundCheck.position + DecalPos);
+        // Debug.DrawLine(transform.position + DecalNeg, m_GroundCheck.position + DecalNeg);
 
         if (m_IsGroundedCenter || m_IsGroundedRight || m_IsGroundedLeft)
         {
@@ -178,14 +166,24 @@ public class CharacterBehavior : MonoBehaviour
         }
     }
 
+    void AddPV()
+    {
+        m_pv += 1f;
+    }
+
+
+    void DelPV()
+    {
+        m_pv -= 1f;
+    }
 
     #endregion
 
     #region Utils
-    void OnGUI()
-    {
-        GUILayout.Button("x: " + m_RigidB2D.velocity.x + " \n y:" + m_RigidB2D.velocity.y);
-    }
+    //void OnGUI()
+    //{
+    //    GUILayout.Button("x: " + m_RigidB2D.velocity.x + " \n y:" + m_RigidB2D.velocity.y);
+    //}
     #endregion
 
     #region Private properties
@@ -198,7 +196,10 @@ public class CharacterBehavior : MonoBehaviour
     bool m_IsGroundedRight;
     bool m_IsGroundedLeft;
     bool m_CanWalk;
+
     
+    float m_FloorDistance;
+    float m_MaxFloorDistance;
     #endregion
 
 
