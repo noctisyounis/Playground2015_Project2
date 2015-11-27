@@ -17,10 +17,9 @@ public class WeaponBehavior : MonoBehaviour
     } 
 
     void OnTriggerEnter2D(Collider2D other)
-    {       
+    {
         if (!other.CompareTag("Character"))
         {
-            Debug.Log("fezfafez");
             Destroy(gameObject);
         }        
     }
