@@ -25,6 +25,7 @@ public class CharacterBehavior : MonoBehaviour
     //      Stop sneaking when shooting/jumping
     //      Fall gestion
     //      Directionnal flip-bug
+    //      Debug jump+shoot with RETURN
 
 
 
@@ -44,7 +45,7 @@ public class CharacterBehavior : MonoBehaviour
         m_IsGrounded = Physics2D.Linecast(transform.position, m_GroundCheck.position, m_GroundLayer);
 
         // Display a visual ray on scene
-        // Debug.DrawLine(transform.position, m_GroundCheck.position);
+        Debug.DrawLine(transform.position, m_GroundCheck.position);
 
         m_CurrentPosition = transform.position;
 
@@ -139,13 +140,12 @@ public class CharacterBehavior : MonoBehaviour
 
     void Flip()
     {
-        //m_FacingRight = !m_FacingRight;
+        // m_FacingRight = !m_FacingRight;
 
         Vector3 CharacterScale = transform.localScale;
         CharacterScale.x *= -1;
         transform.localScale = CharacterScale;
     }
-
 
 
     #endregion
@@ -158,6 +158,7 @@ public class CharacterBehavior : MonoBehaviour
     #endregion
 
     #region Private properties
+
     Vector3 m_CurrentPosition;
     Rigidbody2D m_RigidB2D;
     bool m_FacingRight;
