@@ -24,6 +24,7 @@ namespace Assets.Script.Character
 
         public int Pv { get; private set; }
 
+
     
         #endregion
 
@@ -36,7 +37,6 @@ namespace Assets.Script.Character
         //      Link animators
 
 
-
         #region Main methods
  
         void Start ()
@@ -44,11 +44,16 @@ namespace Assets.Script.Character
             m_RigidB2D = GetComponent<Rigidbody2D>();
             m_SpriteRend = GetComponent<SpriteRenderer>();
             m_FacingRight = true;
-            m_CanWalk = true;
+            m_IsShooting = false;
             m_SelectedAmmo = Ammo.DestroyWave;
             Pv = 3;
             m_IsVulnerable = true;
-     
+            m_Animator = gameObject.GetComponent<Animator>();    
+        }
+
+        void Update()
+        {
+           
         }
 
 
@@ -64,8 +69,6 @@ namespace Assets.Script.Character
 
             StopCoroutine(Shoot());
             StartCoroutine(Shoot());
-
-            
         }
 
         void SwitchAmmo()
@@ -88,13 +91,22 @@ namespace Assets.Script.Character
 
         IEnumerator Shoot()
         {
-            Vector3 ShootPosition = new Vector3(0, 0.8f, 0);
+            Vector3 ShootPosition = new Vector3(1.5f, 1.4f, 0);
+
+            if (!m_FacingRight)
+            {
+                ShootPosition.x = ShootPosition.x * -1;
+            }
 
             // if RETURN or SPACE is pressed down
-            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) && m_IsGrounded)
+            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) && m_IsGrounded && !m_IsShooting)
             {
                 // Disable walk
-                m_CanWalk = false;
+                m_IsShooting = true;
+                // Play animation
+                m_Animator.Play("Shoot");
+                // Synchronisation with animation
+                yield return new WaitForSeconds(0.5f);
                 // Check the current character direction
                 Vector2 ShootDirection = m_FacingRight ? Vector2.right : Vector2.left;
                 // Adapt prefab type and intantiate the wave
@@ -107,35 +119,43 @@ namespace Assets.Script.Character
                 WavePrefab.GetComponent<Rigidbody2D>().velocity = ShootDirection * m_ShootForce;
                 Debug.Log("Velocity : "+WavePrefab.GetComponent<Rigidbody2D>().velocity);
                 // Delay
-                yield return new WaitForSeconds(1);
+                yield return new WaitForSeconds(0.5f);
                 // After 1sec, destroy the Wave GameObject
                 Destroy(WavePrefab);
+                // Stop animation
+                m_Animator.Play("Idle");
                 // Enable walk
-                m_CanWalk = true;
+                m_IsShooting = false;
             }
         }
 
+
+
         void Move()
         {
-            if (m_CanWalk)
+            if (!m_IsShooting)
             {
                 float Axis = Input.GetAxisRaw(m_Axis);
                 m_RigidB2D.velocity = new Vector2(Axis, 0) * m_MoveSpeed;
             }
-        
+
             if ((Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.Q)) && m_FacingRight)
             {
                 m_FacingRight = false;
+                m_Animator.Play("Walk");
                 Flip();
             }
 
-            if ((Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D)) && !m_FacingRight)
+            else if ((Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D)) && !m_FacingRight)
             {
                 m_FacingRight = true;
+                m_Animator.Play("Walk");
                 Flip();
             }
         }
-   
+
+
+
         void Jump()
         {
             // Jump only if Z or UpArrow is pressed down, if vertical velocity = 0, and if character is on a grounded or on a platform
@@ -153,6 +173,11 @@ namespace Assets.Script.Character
             Vector3 CharacterScale = transform.localScale;
             CharacterScale.x *= -1;
             transform.localScale = CharacterScale;
+
+            Vector3 Pivot = m_Animator.pivotPosition;
+            Pivot.x *= -1;
+            m_Animator.bodyPosition = Pivot;
+
         }
 
         void CheckIfGrounded()
@@ -258,10 +283,11 @@ namespace Assets.Script.Character
         bool m_IsGroundedCenter;
         bool m_IsGroundedRight;
         bool m_IsGroundedLeft;
-        bool m_CanWalk;
+        bool m_IsShooting;
         public bool m_IsVulnerable;
         int m_Pv;
         int m_MaxPV;
+        Animator m_Animator;
   
         #endregion
 
