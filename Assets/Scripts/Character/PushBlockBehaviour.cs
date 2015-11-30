@@ -34,6 +34,7 @@ namespace Assets.Scripts.Character
                 {
                     m_rgbd2d.velocity = Vector2.left * 3;
                 }
+
             }
 
             else

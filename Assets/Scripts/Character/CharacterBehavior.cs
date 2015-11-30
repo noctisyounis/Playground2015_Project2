@@ -18,7 +18,9 @@ public class CharacterBehavior : MonoBehaviour
 
     public Ammo m_SelectedAmmo;
 
-    public float m_pv;
+    public int Pv { get; private set; }
+
+
 
     #endregion
 
@@ -27,7 +29,8 @@ public class CharacterBehavior : MonoBehaviour
     //      Stop walking when jumping (just before), then jump
     //      Fall gestion
     //      Directionnal flip-bug
-    //      Debug jump+shoot with RETURN : max floor distance calcul !!
+    //      Debug jump+shoot with RETURN !!
+
 
 
     #region Main methods
@@ -35,11 +38,13 @@ public class CharacterBehavior : MonoBehaviour
     {
         m_RigidB2D = GetComponent<Rigidbody2D>();
         m_FacingRight = true;
-        m_MaxFloorDistance = 2f;
         m_CanWalk = true;
         m_SelectedAmmo = Ammo.DestroyWave;
-        m_pv = 3f;
+        Pv = 3;
+        m_IsVulnerable = true;
     }
+
+
 
     void FixedUpdate ()
     {       
@@ -48,6 +53,7 @@ public class CharacterBehavior : MonoBehaviour
         CheckIfGrounded();
         Move();
         Jump();
+
         SwitchAmmo();
 
         StopCoroutine(Shoot());
@@ -76,8 +82,8 @@ public class CharacterBehavior : MonoBehaviour
     {
         Vector3 ShootPosition = new Vector3(0, 0.8f, 0);
 
-        // if RETURN is pressed down
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
+        // if RETURN or SPACE is pressed down
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) && m_IsGrounded)
         {
             // Disable walk
             m_CanWalk = false;
@@ -122,12 +128,14 @@ public class CharacterBehavior : MonoBehaviour
         }
     }
 
+   
     void Jump()
     {
-        // Jump only if SPACE is pressed down, if vertical velocity =0, and if character is on a grounded or on a platform
+        // Jump only if Z or UpArrow is pressed down, if vertical velocity = 0, and if character is on a grounded or on a platform
         if ((Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.UpArrow)) && m_RigidB2D.velocity.y == 0 && m_IsGrounded)
         {
-            m_RigidB2D.velocity = (Vector2.up * m_JumpSpeed);
+            m_RigidB2D.AddForce(new Vector2(0,1000f),ForceMode2D.Impulse);
+            // m_RigidB2D.velocity = (Vector2.up * m_JumpSpeed);
         }
     }
 
@@ -162,20 +170,52 @@ public class CharacterBehavior : MonoBehaviour
 
         else
         {
-            m_IsGrounded = false; 
+            m_IsGrounded = false;
         }
     }
 
-    void AddPV()
+
+    void AddPV(int value)
     {
-        m_pv += 1f;
+        if (value >= 0)
+        {
+            if (m_Pv + value > m_MaxPV)
+            {
+                m_Pv = m_MaxPV;
+            }
+
+            else
+            {
+                m_Pv += value;
+            }
+        }
+
+        else if (m_IsVulnerable)
+        {
+            StartCoroutine(SetInvulnerable());
+
+            if (m_Pv - value < 0)
+            {
+                m_Pv = 0;
+            }
+
+            else
+            {
+                m_Pv += value;
+            }
+        }
+
     }
 
 
-    void DelPV()
+    IEnumerator SetInvulnerable(float seconds = 4)
     {
-        m_pv -= 1f;
+        m_IsVulnerable = false;
+        yield return new WaitForSeconds(seconds);
+        m_IsVulnerable = true;
     }
+
+  
 
     #endregion
 
@@ -187,7 +227,6 @@ public class CharacterBehavior : MonoBehaviour
     #endregion
 
     #region Private properties
-
     Vector3 m_CurrentPosition;
     Rigidbody2D m_RigidB2D;
     bool m_FacingRight;
@@ -196,13 +235,10 @@ public class CharacterBehavior : MonoBehaviour
     bool m_IsGroundedRight;
     bool m_IsGroundedLeft;
     bool m_CanWalk;
-
-    
-
-
-    
-    float m_FloorDistance;
-    float m_MaxFloorDistance;
+    public bool m_IsVulnerable;
+    int m_Pv;
+    int m_MaxPV;
+  
     #endregion
 
 
