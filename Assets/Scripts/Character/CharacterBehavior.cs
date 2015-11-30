@@ -24,8 +24,7 @@ namespace Assets.Script.Character
 
         public int Pv { get; private set; }
 
-
-
+    
         #endregion
 
         //      TODO :
@@ -34,20 +33,23 @@ namespace Assets.Script.Character
         //      Fall gestion
         //      Directionnal flip-bug
         //      Debug jump+shoot with RETURN !!
+        //      Link animators
 
 
 
         #region Main methods
+ 
         void Start ()
         {
             m_RigidB2D = GetComponent<Rigidbody2D>();
+            m_SpriteRend = GetComponent<SpriteRenderer>();
             m_FacingRight = true;
             m_CanWalk = true;
             m_SelectedAmmo = Ammo.DestroyWave;
             Pv = 3;
             m_IsVulnerable = true;
+     
         }
-
 
 
         void FixedUpdate ()
@@ -62,6 +64,8 @@ namespace Assets.Script.Character
 
             StopCoroutine(Shoot());
             StartCoroutine(Shoot());
+
+            
         }
 
         void SwitchAmmo()
@@ -131,7 +135,6 @@ namespace Assets.Script.Character
                 Flip();
             }
         }
-
    
         void Jump()
         {
@@ -178,7 +181,6 @@ namespace Assets.Script.Character
             }
         }
 
-
         void AddPV(int value)
         {
             if (value >= 0)
@@ -211,17 +213,34 @@ namespace Assets.Script.Character
 
         }
 
-
         IEnumerator SetInvulnerable(float seconds = 4)
         {
             m_IsVulnerable = false;
+            StartCoroutine("Blink");
             yield return new WaitForSeconds(seconds);
+            StopCoroutine("Blink");
             m_IsVulnerable = true;
         }
+      
+        
+        IEnumerator Blink()
+        {
+            bool value = false;
+            SpriteRenderer[] RendList = gameObject.GetComponentsInChildren<SpriteRenderer>(true);
 
-  
+            while (true)
+            {
+                foreach (SpriteRenderer sr in RendList)
+                {
+                    sr.enabled = value;
+                }
 
+                value = !value;
+                yield return new WaitForSeconds(0.2f); 
+            }
+        }
         #endregion
+
 
         #region Utils
         //void OnGUI()
@@ -233,6 +252,7 @@ namespace Assets.Script.Character
         #region Private properties
         Vector3 m_CurrentPosition;
         Rigidbody2D m_RigidB2D;
+        SpriteRenderer m_SpriteRend;
         bool m_FacingRight;
         bool m_IsGrounded;
         bool m_IsGroundedCenter;
