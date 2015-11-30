@@ -8,7 +8,7 @@ public class CharacterBehavior : MonoBehaviour
     #region Public properties
     public string m_Axis;
     public float m_MoveSpeed = 10.0f;
-    public float m_JumpSpeed = 10.0f;
+    public float m_JumpSpeed = 150.0f;
     public float m_ShootForce = 15.0f;
 
     public Transform m_GroundCheck;
@@ -25,6 +25,7 @@ public class CharacterBehavior : MonoBehaviour
     //      Stop sneaking when shooting/jumping
     //      Fall gestion
     //      Directionnal flip-bug
+    //      Debug jump+shoot with RETURN
 
 
 
@@ -40,14 +41,12 @@ public class CharacterBehavior : MonoBehaviour
 
 
     void FixedUpdate ()
-    {  
-        m_IsGrounded = Physics2D.Linecast(transform.position, m_GroundCheck.position, m_GroundLayer);
-
-        // Display a visual ray on scene
-        // Debug.DrawLine(transform.position, m_GroundCheck.position);
+    {
+        
 
         m_CurrentPosition = transform.position;
 
+        CheckGrounded();
         Move();
         Jump();
         SwitchAmmo();
@@ -78,6 +77,9 @@ public class CharacterBehavior : MonoBehaviour
 
     IEnumerator Shoot(Ammo AmmoType)
     {
+
+        Vector3 ShootPosition = new Vector3(0, 0.8f, 0);
+
         // if RETURN is pressed down
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
         {
@@ -87,11 +89,15 @@ public class CharacterBehavior : MonoBehaviour
             Vector2 ShootDirection = m_FacingRight ? Vector2.right : Vector2.left;
             // Adapt prefab type and intantiate the wave
             string PrefabName = (AmmoType == Ammo.DestroyWave) ? "DestroyWavePrefab" : "PushWavePrefab";
-            GameObject WavePrefab = (GameObject)Instantiate(Resources.Load("prefabs/Character/"+PrefabName));
-            // Bullet position at the current character position        
-            WavePrefab.transform.position = m_CurrentPosition;
+            
+            GameObject WavePrefab = (GameObject)Instantiate(Resources.Load("prefabs/Character/" + PrefabName));
+
+            // Bullet position at the current character position    
+            WavePrefab.transform.position = m_CurrentPosition + ShootPosition;
+            Debug.Log("Position of instantiation : "+WavePrefab.transform.position);
             // Apply force and direction to the Wave velocity
             WavePrefab.GetComponent<Rigidbody2D>().velocity = ShootDirection * m_ShootForce;
+            Debug.Log("Velocity : "+WavePrefab.GetComponent<Rigidbody2D>().velocity);
             // Delay
             yield return new WaitForSeconds(1);
             // After 1sec, destroy the Wave GameObject
@@ -139,13 +145,38 @@ public class CharacterBehavior : MonoBehaviour
 
     void Flip()
     {
-        //m_FacingRight = !m_FacingRight;
+        // m_FacingRight = !m_FacingRight;
 
         Vector3 CharacterScale = transform.localScale;
         CharacterScale.x *= -1;
         transform.localScale = CharacterScale;
     }
 
+
+    void CheckGrounded()
+    {
+        Vector3 DecalPos = new Vector3(0.35f, 0, 0);
+        Vector3 DecalNeg = new Vector3(-0.35f, 0, 0);
+
+        m_IsGroundedCenter = Physics2D.Linecast(transform.position, m_GroundCheck.position, m_GroundLayer);
+        m_IsGroundedRight = Physics2D.Linecast(transform.position + DecalPos, m_GroundCheck.position, m_GroundLayer);
+        m_IsGroundedLeft = Physics2D.Linecast(transform.position + DecalNeg, m_GroundCheck.position, m_GroundLayer);
+
+        // Display rays on scene
+        Debug.DrawLine(transform.position, m_GroundCheck.position);
+        Debug.DrawLine(transform.position + DecalPos, m_GroundCheck.position + DecalPos);
+        Debug.DrawLine(transform.position + DecalNeg, m_GroundCheck.position + DecalNeg);
+
+        if (m_IsGroundedCenter || m_IsGroundedRight || m_IsGroundedLeft)
+        {
+            m_IsGrounded = true;
+        }
+
+        else
+        {
+            m_IsGrounded = false; 
+        }
+    }
 
 
     #endregion
@@ -158,10 +189,14 @@ public class CharacterBehavior : MonoBehaviour
     #endregion
 
     #region Private properties
+
     Vector3 m_CurrentPosition;
     Rigidbody2D m_RigidB2D;
     bool m_FacingRight;
     bool m_IsGrounded;
+    bool m_IsGroundedCenter;
+    bool m_IsGroundedRight;
+    bool m_IsGroundedLeft;
     bool m_CanWalk;
     
     #endregion
