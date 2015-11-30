@@ -2,34 +2,37 @@
 using System.Collections;
 using Assets.Scripts.Character.enums;
 
-public class WeaponBehavior : MonoBehaviour
+namespace Assets.Scripts.Character
 {
-    #region Main methods
-    void Start ()
+    public class WeaponBehavior : MonoBehaviour
     {
-       
-    }
-
-    void FixedUpdate()
-    {
-        // Wave auto-destruction default period (if never colliding or triggering)
-        Destroy(gameObject, 1);
-    } 
-
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (!other.CompareTag("Character"))
+        #region Main methods
+        void Start()
         {
-            Destroy(gameObject);
-        }        
+
+        }
+
+        void FixedUpdate()
+        {
+            // Wave auto-destruction default period (if never colliding or triggering)
+            Destroy(gameObject, 1);
+        }
+
+        void OnTriggerEnter2D(Collider2D other)
+        {
+            if (!other.CompareTag("Character"))
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        #endregion
+
+        #region Private Properties
+
+        #endregion
+
+
+
     }
-
-    #endregion
-
-    #region Private Properties
-
-    #endregion
-
-
-
 }
