@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Assets.Scripts.Character.enums;
 
-namespace Assets.Scripts.Character
-{
 
-    class PushBlockBehaviour : MonoBehaviour
+
+    public class PushBlockBehaviour : MonoBehaviour
     {
         #region Main methods
 
@@ -56,4 +54,4 @@ namespace Assets.Scripts.Character
         #endregion
 
     }
-}
+

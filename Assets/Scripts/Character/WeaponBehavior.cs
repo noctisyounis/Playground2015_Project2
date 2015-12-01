@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Assets.Scripts.Character.enums;
 
-namespace Assets.Scripts.Character
-{
+
+
     public class WeaponBehavior : MonoBehaviour
     {
         #region Main methods
@@ -35,4 +34,4 @@ namespace Assets.Scripts.Character
 
 
     }
-}
+

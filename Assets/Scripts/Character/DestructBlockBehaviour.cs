@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Assets.Scripts.Character.enums;
 
-namespace Assets.Scripts.Character
-{
-    class DestructBlockBehaviour : MonoBehaviour
+
+
+    public class DestructBlockBehaviour : MonoBehaviour
     {
         void Start()
         {
@@ -36,4 +35,4 @@ namespace Assets.Scripts.Character
 
 
     }
-}
+
