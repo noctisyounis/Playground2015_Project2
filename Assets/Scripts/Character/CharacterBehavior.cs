@@ -7,6 +7,7 @@ public class CharacterBehavior : MonoBehaviour
     //      TODO :
     //      Stop walking when shooting
     //      Link jump animator
+    //      yield WaitForAnimation( animation ); !!!!!
 
 
     #region Public properties
@@ -25,7 +26,7 @@ public class CharacterBehavior : MonoBehaviour
     #region Enums
     public enum Ammo
     {
-        DestroyWave,
+        DestroyWave ,
         PushWave
     }
 

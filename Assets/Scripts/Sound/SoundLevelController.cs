@@ -26,12 +26,10 @@ public class SoundLevelController : MonoBehaviour
         m_AudioSource2.Play();
     }
 
-
     void FixedUpdate ()
     {
         Balance();
 	}
-
 
     void Balance()
     {
@@ -49,9 +47,6 @@ public class SoundLevelController : MonoBehaviour
         // Down the scratches volume
         m_AudioSource2.volume = 1.00f - BalancePercent;
     }
-
-
-
 
     #region Private properties
     AudioHighPassFilter m_HighPassFilter;
