@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEditor;
 
-public class CharacterBehavior : MonoBehaviour
+public class CharacterBehaviour : MonoBehaviour
 {
 
     //      TODO :
@@ -20,7 +21,7 @@ public class CharacterBehavior : MonoBehaviour
     public Ammo m_SelectedAmmo;
     public float m_gravityForce;
     public float m_ShootForce;
-    public int Pv { get; private set; }
+    public int m_Pv;
     #endregion
 
     #region Enums
@@ -47,9 +48,10 @@ public class CharacterBehavior : MonoBehaviour
         m_FacingRight = true;
         m_Animator = GetComponent<Animator>();
         m_SelectedAmmo = Ammo.DestroyWave;
-        Pv = 3;
+        m_Pv = 3;
         m_IsVulnerable = true;
         m_IsShooting = false;
+        m_RendList = gameObject.GetComponentsInChildren<SpriteRenderer>(true);
     }
     
     void FixedUpdate()
@@ -69,6 +71,7 @@ public class CharacterBehavior : MonoBehaviour
                 Move(); // IMPORTANT !  When the character is walking, he must be able to continue to walk (at the next frame) !!
                 Jump();
                 m_Animator.Play("Walk");
+                
 
                 ChangeState();
                 break;
@@ -116,7 +119,6 @@ public class CharacterBehavior : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             m_rgbd.AddForce(new Vector2(m_rgbd.velocity.x, m_JumpForce));
-            Debug.Log("Jumped");
         }
     }
 
@@ -250,7 +252,7 @@ public class CharacterBehavior : MonoBehaviour
         m_rgbd.velocity = new Vector2(m_rgbd.velocity.x, m_rgbd.velocity.y - m_gravityForce * Time.deltaTime);
     }
 
-    void AddPV(int value)
+    public void AddPV(int value)
     {
         if (value >= 0)
         {
@@ -269,9 +271,10 @@ public class CharacterBehavior : MonoBehaviour
         {
             StartCoroutine(SetInvulnerable());
 
-            if (m_Pv - value < 0)
+            if (m_Pv + value <= 0)
             {
                 m_Pv = 0;
+                Death();
             }
 
             else
@@ -281,23 +284,26 @@ public class CharacterBehavior : MonoBehaviour
         }
     }
 
-    IEnumerator SetInvulnerable(float seconds = 4)
+    IEnumerator SetInvulnerable(float seconds = 2.5f)
     {
         m_IsVulnerable = false;
         StartCoroutine("Blink");
         yield return new WaitForSeconds(seconds);
         StopCoroutine("Blink");
+        foreach (SpriteRenderer sr in m_RendList)
+        {
+            sr.enabled = true;
+        }
         m_IsVulnerable = true;
     }
 
     IEnumerator Blink()
     {
         bool value = false;
-        SpriteRenderer[] RendList = gameObject.GetComponentsInChildren<SpriteRenderer>(true);
-
+        
         while (true)
         {
-            foreach (SpriteRenderer sr in RendList)
+            foreach (SpriteRenderer sr in m_RendList)
             {
                 sr.enabled = value;
             }
@@ -305,6 +311,18 @@ public class CharacterBehavior : MonoBehaviour
             value = !value;
             yield return new WaitForSeconds(0.2f);
         }
+    }
+
+    void Death()
+    {
+        Destroy(gameObject);
+
+        //string MsgTitre = "Mort";
+        //string MsgContent = "Vous êtes mort";
+        //string MsgOk = "Ok";
+        //EditorUtility.DisplayDialog(MsgTitre, MsgContent, MsgOk);
+
+        // Respawn ..
     }
     #endregion
 
@@ -323,9 +341,9 @@ public class CharacterBehavior : MonoBehaviour
     bool m_IsVulnerable;
     Animator m_Animator;
     Vector3 m_CurrentPosition;
-    int m_Pv;
     int m_MaxPV;
     bool m_IsShooting;
+    SpriteRenderer[] m_RendList;
     #endregion
 
 

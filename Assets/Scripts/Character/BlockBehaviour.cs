@@ -3,7 +3,7 @@ using System.Collections;
 
 
 
-public class PushBlockBehaviour : MonoBehaviour
+public class BlockBehaviour : MonoBehaviour
 {
 
     #region Public Properties
@@ -22,7 +22,7 @@ public class PushBlockBehaviour : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("PushWave"))
+        if (gameObject.CompareTag("Pushable") && other.gameObject.CompareTag("PushWave"))
         {
             float OtherVeloX = other.GetComponent<Rigidbody2D>().velocity.x;
 
@@ -37,14 +37,16 @@ public class PushBlockBehaviour : MonoBehaviour
             }
         }
 
+        else if (gameObject.CompareTag("Destructible") && other.gameObject.CompareTag("DestroyWave"))
+        {
+            Destroy(gameObject);
+        }
+
         else
         {
             StartCoroutine(Shake());
         }
     }
-
-    
-
 
     IEnumerator Shake()
     {
