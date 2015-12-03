@@ -60,7 +60,7 @@ public class CharacterBehaviour : MonoBehaviour
                 Move();
                 Jump();
 
-                if(m_stateChanged)
+                if (m_stateChanged)
                 { 
                     m_Animator.CrossFade("Idle",0.1f);
                     m_stateChanged = false;
@@ -85,7 +85,10 @@ public class CharacterBehaviour : MonoBehaviour
             case PlayerState.Jump :
                 ApplyGravity();
                 Move();
-
+                if (m_stateChanged)
+                {
+                    m_Animator.Play("Jump");
+                }
                 ChangeState();
                 break;
 
@@ -220,6 +223,7 @@ public class CharacterBehaviour : MonoBehaviour
         Vector3 CharacterScale = transform.localScale;
         CharacterScale.x *= -1;
         transform.localScale = CharacterScale;
+        //m_Animator.Play("Walk");
     }
 
     bool CheckWalk()
