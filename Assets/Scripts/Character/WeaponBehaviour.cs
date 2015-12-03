@@ -2,8 +2,7 @@
 using System.Collections;
 
 
-
-    public class WeaponBehavior : MonoBehaviour
+    public class WeaponBehaviour : MonoBehaviour
     {
         #region Main methods
         void Start()
@@ -21,6 +20,7 @@ using System.Collections;
         {
             if (!other.CompareTag("Character"))
             {
+                // TODO : Fade Out
                 Destroy(gameObject);
             }
         }

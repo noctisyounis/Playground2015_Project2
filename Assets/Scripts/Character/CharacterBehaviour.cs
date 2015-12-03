@@ -8,8 +8,6 @@ public class CharacterBehaviour : MonoBehaviour
     //      TODO :
     //      Stop walking when shooting
     //      Link jump animator
-    //      yield WaitForAnimation( animation ); !!!!!
-
 
     #region Public properties
     public PlayerState m_playerState;
@@ -46,7 +44,7 @@ public class CharacterBehaviour : MonoBehaviour
         m_playerState = PlayerState.Idle;
         m_rgbd = GetComponent<Rigidbody2D>();
         m_FacingRight = true;
-        m_Animator = GetComponent<Animator>();
+        m_Animator = GetComponentInChildren<Animator>();
         m_SelectedAmmo = Ammo.DestroyWave;
         m_Pv = 3;
         m_IsVulnerable = true;
@@ -61,7 +59,13 @@ public class CharacterBehaviour : MonoBehaviour
             case PlayerState.Idle :
                 Move();
                 Jump();
-                m_Animator.Play("Idle");
+
+                if(m_stateChanged)
+                { 
+                    m_Animator.CrossFade("Idle",0.1f);
+                    m_stateChanged = false;
+                }
+
                 StartCoroutine(Shoot());
 
                 ChangeState();
@@ -70,8 +74,11 @@ public class CharacterBehaviour : MonoBehaviour
             case PlayerState.Walk :
                 Move(); // IMPORTANT !  When the character is walking, he must be able to continue to walk (at the next frame) !!
                 Jump();
-                m_Animator.Play("Walk"); 
-
+                if(m_stateChanged)
+                { 
+                    m_Animator.CrossFade("Walk",0.1f);
+                    m_stateChanged = false;
+                }
                 ChangeState();
                 break;
 
@@ -83,8 +90,11 @@ public class CharacterBehaviour : MonoBehaviour
                 break;
 
             case PlayerState.Shoot :
-                m_Animator.Play("Shoot");
-
+                if(m_stateChanged)
+                { 
+                    m_Animator.CrossFade("Shoot",0.1f);
+                    m_stateChanged = false;
+                }
                 ChangeState();
                 break;
 
@@ -127,25 +137,34 @@ public class CharacterBehaviour : MonoBehaviour
         {
             m_IsShooting = true;
 
-            Vector3 ShootPosition = new Vector3(1.5f, 1.4f, 0);
+            Vector3 ShootPosition = new Vector3(1.3f, 1.4f, 0);
+            Vector2 ShootDirection = Vector2.right;
 
-            if (!m_FacingRight)
-            {
-                ShootPosition.x = ShootPosition.x * -1;
-            }
-
-            // Synchronisation with animation
+            // Synchronise with animation
             yield return new WaitForSeconds(0.5f);
-            // Check the current character direction
-            Vector2 ShootDirection = m_FacingRight ? Vector2.right : Vector2.left;
+
             // Adapt prefab type and intantiate the wave
             string PrefabName = (m_SelectedAmmo == Ammo.DestroyWave) ? "DestroyWavePrefab" : "PushWavePrefab";
             GameObject WavePrefab = (GameObject)Instantiate(Resources.Load("prefabs/Character/" + PrefabName));
-            // Bullet position at the current character position    
+
+            // If the character is looking in the other direction
+            if (!m_FacingRight)
+            {
+                // Flip position and direction
+                ShootPosition.x = ShootPosition.x * -1;
+                ShootDirection = Vector2.left;
+
+                // Flip the wave renderer on x
+                Vector3 WaveScale = WavePrefab.transform.localScale;
+                WaveScale.x *= -1;
+                WavePrefab.transform.localScale = WaveScale;
+            }
+
+            // Put the wave position at the current character position
             WavePrefab.transform.position = m_CurrentPosition + ShootPosition;
             // Apply force and direction to the Wave velocity
             WavePrefab.GetComponent<Rigidbody2D>().velocity = ShootDirection * m_ShootForce;
-            // Delay
+            // Delay before destroy
             yield return new WaitForSeconds(0.5f);
             // After 1sec, destroy the Wave GameObject
             Destroy(WavePrefab);
@@ -161,22 +180,31 @@ public class CharacterBehaviour : MonoBehaviour
         {
             if (CheckWalk())
             {
+                m_previousState = m_playerState;
                 m_playerState = PlayerState.Walk;
             }
 
             else if (m_IsShooting)
             {
+                m_previousState = m_playerState;
                 m_playerState = PlayerState.Shoot;
             }
 
             else
             {
+                m_previousState = m_playerState;
                 m_playerState = PlayerState.Idle;
             }
         }
         else
         {
+            m_previousState = m_playerState;
             m_playerState = PlayerState.Jump;
+        }
+
+        if(m_playerState != m_previousState)
+        {
+            m_stateChanged = true;
         }
     }
 
@@ -343,6 +371,8 @@ public class CharacterBehaviour : MonoBehaviour
     int m_MaxPV;
     bool m_IsShooting;
     SpriteRenderer[] m_RendList;
+    bool m_stateChanged = true;
+    PlayerState m_previousState;
     #endregion
 
 
