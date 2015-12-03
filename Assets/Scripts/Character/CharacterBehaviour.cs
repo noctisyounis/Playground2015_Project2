@@ -61,8 +61,8 @@ public class CharacterBehaviour : MonoBehaviour
             case PlayerState.Idle :
                 Move();
                 Jump();
-                StartCoroutine(Shoot());
                 m_Animator.Play("Idle");
+                StartCoroutine(Shoot());
 
                 ChangeState();
                 break;
@@ -70,8 +70,7 @@ public class CharacterBehaviour : MonoBehaviour
             case PlayerState.Walk :
                 Move(); // IMPORTANT !  When the character is walking, he must be able to continue to walk (at the next frame) !!
                 Jump();
-                m_Animator.Play("Walk");
-                
+                m_Animator.Play("Walk"); 
 
                 ChangeState();
                 break;
