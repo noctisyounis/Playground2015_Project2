@@ -1,0 +1,210 @@
+fileFormatVersion: 2
+guid: 32f312e23108f2c4686248016f1446f7
+timeCreated: 1449157354
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: LevelAssets_BrickBlue
+    21300002: LevelAssets_BrickPurple
+    21300004: LevelAssets_Structure
+    21300006: LevelAssets_VinylTriangleTall
+    21300008: LevelAssets_LifeNote
+    21300010: LevelAssets_VinylSquare
+    21300012: LevelAssets_VinylTriangle
+    21300014: LevelAssets_PushableBlock
+    21300016: LevelAssets_ElectricPost
+    21300018: LevelAssets_MovingPlatform
+    21300020: LevelAssets_ElectricPlatform
+    21300022: LevelAssets_Spike
+    21300024: LevelAssets_SpikeTall
+    21300026: LevelAssets_Piston
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 36
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: LevelAssets_BrickBlue
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 211
+        width: 36
+        height: 36
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LevelAssets_BrickPurple
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 157
+        width: 36
+        height: 36
+      alignment: 9
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LevelAssets_Structure
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 166
+        width: 36
+        height: 36
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LevelAssets_VinylTriangleTall
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 175
+        width: 36
+        height: 72
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LevelAssets_LifeNote
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 211
+        width: 36
+        height: 36
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LevelAssets_VinylSquare
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 211
+        width: 36
+        height: 36
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LevelAssets_VinylTriangle
+      rect:
+        serializedVersion: 2
+        x: 189
+        y: 211
+        width: 36
+        height: 36
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LevelAssets_PushableBlock
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 130
+        width: 72
+        height: 72
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LevelAssets_ElectricPost
+      rect:
+        serializedVersion: 2
+        x: 225
+        y: 139
+        width: 18
+        height: 36
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LevelAssets_MovingPlatform
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 86
+        width: 108
+        height: 36
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LevelAssets_ElectricPlatform
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 40
+        width: 108
+        height: 36
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LevelAssets_Spike
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 40
+        width: 36
+        height: 36
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LevelAssets_SpikeTall
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 85
+        width: 36
+        height: 72
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LevelAssets_Piston
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 40
+        width: 72
+        height: 108
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
