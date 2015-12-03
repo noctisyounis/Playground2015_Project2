@@ -164,10 +164,8 @@ public class CharacterBehaviour : MonoBehaviour
             WavePrefab.transform.position = m_CurrentPosition + ShootPosition;
             // Apply force and direction to the Wave velocity
             WavePrefab.GetComponent<Rigidbody2D>().velocity = ShootDirection * m_ShootForce;
-            // Delay before destroy
-            yield return new WaitForSeconds(0.5f);
-            // After 1sec, destroy the Wave GameObject
-            Destroy(WavePrefab);
+            // Delay to close animation
+            yield return new WaitForSeconds(0.3f);
 
             m_IsShooting = false;
 
