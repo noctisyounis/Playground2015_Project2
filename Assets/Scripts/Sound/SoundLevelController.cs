@@ -7,8 +7,6 @@ public class SoundLevelController : MonoBehaviour
     #region Public Properties
     public AudioSource m_AudioSource1;
     public AudioSource m_AudioSource2;
-    public float m_TotalCount;
-    public float m_GrabbedCount;
     #endregion
 
     void Start ()
@@ -27,12 +25,15 @@ public class SoundLevelController : MonoBehaviour
     }
 
     void FixedUpdate ()
-    {
+    {     
+        SetTotalItemsCount();
+        SetGrabbedCount();
         Balance();
-	}
+    }
 
     void Balance()
     {
+
         // Calcul percentage of items found
         float BalancePercent = m_GrabbedCount / m_TotalCount;
 
@@ -48,9 +49,29 @@ public class SoundLevelController : MonoBehaviour
         m_AudioSource2.volume = 1.00f - BalancePercent;
     }
 
+    void SetTotalItemsCount()
+    {
+        float MaxGramoNb = m_gramoManag.getMaxGramoPieces();
+        float MaxDustNb = m_dustManag.getDustTotal();
+
+        m_TotalCount = MaxGramoNb + MaxDustNb;
+    }
+
+    void SetGrabbedCount()
+    {
+        float GrabbedGramoNb = m_gramoManag.getTotalCollectedGramo();
+        float GrabbedDustNb = m_dustManag.getTotalCollectedDust();
+
+        m_GrabbedCount = GrabbedDustNb + GrabbedGramoNb;
+    }
+
     #region Private properties
+    GramoManager m_gramoManag;
+    DustManager m_dustManag;
     AudioHighPassFilter m_HighPassFilter;
     AudioDistortionFilter m_DistortionFilter;
+    float m_TotalCount;
+    float m_GrabbedCount;
     #endregion
 
 }

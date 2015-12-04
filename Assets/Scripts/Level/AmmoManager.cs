@@ -10,11 +10,7 @@ public class AmmoManager : MonoBehaviour
 	// AmmoManager manage the ammunition interface. It needs prefabs icons.
 
 
-	#region public properties		
 
-		public string m_effectivePlayerAmmo;		// Effective player's amunition. Only for test to simulate the switch of ammo. Replace every mention by "player.getSelectedAmmo()"
-		
-	#endregion
 
 
 	# region main methods
@@ -23,7 +19,6 @@ public class AmmoManager : MonoBehaviour
 		{
 			// Player initialization
 			m_player = GameObject.FindGameObjectWithTag ("Player");
-			setPlayerAmmo(m_effectivePlayerAmmo);
 			// Camera initialization
 			camera = GameObject.FindGameObjectWithTag("Interface").GetComponent<Camera>().transform;
 			previousCameraPosition = camera.transform.position;
@@ -46,8 +41,8 @@ public class AmmoManager : MonoBehaviour
 
 		void Update () 
 		{
-			// Listener for player's ammo
-			string newPlayerAmmo = m_effectivePlayerAmmo;
+            // Listener for player's ammo
+            string newPlayerAmmo = m_player.GetComponent<CharacterBehaviour>().GetAmmo();
 
 			if (newPlayerAmmo != getPlayerAmmo() && (newPlayerAmmo == "PushWave" || newPlayerAmmo == "DestroyWave"))
 			{

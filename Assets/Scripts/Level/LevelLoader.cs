@@ -19,11 +19,7 @@ public class LevelLoader : MonoBehaviour
 		public float m_levelLayoutYCorrection;			// Y Position Correction for gameplay patterns
 
 		// LifeManager properties
-		public float m_effectivePlayerLife;				// simulate the amount of life return by player.getLife()
 		public float m_maxPlayerLife;					// maximum player lifes
-		
-		// AmmoManager properties
-		public string m_effectivePlayerAmmo;			// simulate the switch of ammunition
 		
 		// DustManager properties
 		public float m_totalDust;						// Total of dust in the level
@@ -104,7 +100,7 @@ public class LevelLoader : MonoBehaviour
 			levelManager.GetComponent<GrayscaleBackgroundManager> ().setDisplayDelay (m_grayscaleDisplayDelay);
 			levelManager.GetComponent<GrayscaleBackgroundManager> ().setGramoWeight (m_gramoWeightGoalPercentage);
             // LifeManager properties
-            gameManager.GetComponent<LifeManager> ().m_effectivePlayerLife = m_effectivePlayerLife;
+            player.GetComponent<CharacterBehaviour>().SetPv((int)m_maxPlayerLife);
 			gameManager.GetComponent<LifeManager> ().setMaxPlayerLife(m_maxPlayerLife);
 			// DustManager properties
 			collectedDust = getSavedCollectedDust(m_totalDust);
@@ -115,8 +111,7 @@ public class LevelLoader : MonoBehaviour
 			gameManager.GetComponent<GramoManager> ().setAllCollectedGramo (collectedGramo);
 			gameManager.GetComponent<GramoManager> ().setDisplayDelay (m_gramoDisplayDelay);
 			gameManager.GetComponent<GramoManager> ().setSlipDelay (m_gramoSlipDelay);
-			// AmmoManager properties
-			gameManager.GetComponent<AmmoManager> ().m_effectivePlayerAmmo = m_effectivePlayerAmmo;
+
 		}
 
 		private float getPercentage ()

@@ -18,7 +18,6 @@ public class CharacterBehaviour : MonoBehaviour
     public Ammo m_SelectedAmmo;
     public float m_gravityForce;
     public float m_ShootForce;
-    public int m_Pv;
     #endregion
 
     #region Enums
@@ -45,7 +44,7 @@ public class CharacterBehaviour : MonoBehaviour
         m_boxColl = GetComponent<BoxCollider2D>();
         m_FacingRight = true;
         m_Animator = GetComponentInChildren<Animator>();
-        m_SelectedAmmo = Ammo.DestroyWave;
+        m_SelectedAmmo = Ammo.PushWave;
         m_Pv = 3;
         m_IsVulnerable = true;
         m_IsShooting = false;
@@ -230,6 +229,7 @@ public class CharacterBehaviour : MonoBehaviour
         bool IsGroundedRight;
         bool IsGroundedLeft;
 
+        // TODO : reposit. left and right linecasts
         float ColSizeX = m_boxColl.size.x;
 
         // Calcul a clipping compared to Center groundcheck
@@ -298,7 +298,7 @@ public class CharacterBehaviour : MonoBehaviour
             if (m_Pv + value <= 0)
             {
                 m_Pv = 0;
-                Death();
+                StartCoroutine(Death());
             }
 
             else
@@ -337,19 +337,43 @@ public class CharacterBehaviour : MonoBehaviour
         }
     }
 
-    void Death()
+    IEnumerator Death()
     {
+        yield return new WaitForSeconds(0.1f);
         Destroy(gameObject);
 
         // Respawn ..
     }
+
+    public string GetAmmo()
+    {
+        if (m_SelectedAmmo == Ammo.DestroyWave)
+        {
+            return "DestroyWave";
+        }
+        else
+        {
+            return "PushWave";
+        }
+    }
+
+    public int GetPv()
+    {
+        return m_Pv;
+    }
+
+    public void SetPv(int NbPv)
+    {
+        m_Pv = NbPv;
+    }
+
     #endregion
 
     #region Tools
-    void OnGUI()
-    {
-        GUILayout.Button("State : " + m_playerState + "" + "\n" + " Axis " + Input.GetAxisRaw("Horizontal") + "\n" + "x: " + m_rgbd.velocity.x + " \n y:" + m_rgbd.velocity.y);
-    }
+    //void OnGUI()
+    //{
+    //    GUILayout.Button("State : " + m_playerState + "" + "\n" + " Axis " + Input.GetAxisRaw("Horizontal") + "\n" + "x: " + m_rgbd.velocity.x + " \n y:" + m_rgbd.velocity.y);
+    //}
     #endregion
 
     #region Private properties
@@ -366,6 +390,7 @@ public class CharacterBehaviour : MonoBehaviour
     SpriteRenderer[] m_RendList;
     bool m_stateChanged = true;
     PlayerState m_previousState;
+    int m_Pv;
     #endregion
 
 

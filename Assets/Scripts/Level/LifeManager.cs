@@ -10,12 +10,6 @@ public class LifeManager : MonoBehaviour
 	// LifeManager manage the life interface. It needs prefabs icons
 
 
-	#region public properties
-
-		public float m_effectivePlayerLife;			// Effective player's life. Only for test to simulate the win or lost of lifes. Replace every mention by "player.getLife()"
-
-	#endregion
-
 
 	#region main methods
 
@@ -23,7 +17,6 @@ public class LifeManager : MonoBehaviour
 		{
 			// Player initialization
 			player = GameObject.FindGameObjectWithTag ("Player");
-			setPlayerLife(m_effectivePlayerLife);
 			// Camera initialization
 			camera = GameObject.FindGameObjectWithTag("Interface").GetComponent<Camera>().transform;
 			previousCameraPosition = camera.transform.position;
@@ -45,8 +38,8 @@ public class LifeManager : MonoBehaviour
 
 		void Update () 
 		{
-			// Listener for player's life points
-			float newPlayerLife = m_effectivePlayerLife;
+        // Listener for player's life points
+        float newPlayerLife = player.GetComponent<CharacterBehaviour>().GetPv();
 
 			if (newPlayerLife != getPlayerLife())
 			{

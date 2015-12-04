@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <poussieres>
+    <poussiere>
+      <Dustcollected>false</Dustcollected>
+    </poussiere>
+    <poussiere>
+      <Dustcollected>false</Dustcollected>
+    </poussiere>
+    <poussiere>
+      <Dustcollected>false</Dustcollected>
+    </poussiere>
+    <poussiere>
+      <Dustcollected>true</Dustcollected>
+    </poussiere>
+    <poussiere>
+      <Dustcollected>true</Dustcollected>
+    </poussiere>
+    <poussiere>
+      <Dustcollected>true</Dustcollected>
+    </poussiere>
+    <poussiere>
+      <Dustcollected>true</Dustcollected>
+    </poussiere>
+    <poussiere>
+      <Dustcollected>true</Dustcollected>
+    </poussiere>
+    <poussiere>
+      <Dustcollected>true</Dustcollected>
+    </poussiere>
+    <poussiere>
+      <Dustcollected>false</Dustcollected>
+    </poussiere>
+    <poussiere>
+      <Dustcollected>false</Dustcollected>
+    </poussiere>
+    <poussiere>
+      <Dustcollected>false</Dustcollected>
+    </poussiere>
+  </poussieres>
+</root>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <gramophones>
+    <gramophone>
+      <Gramocollected>true</Gramocollected>
+    </gramophone>
+    <gramophone>
+      <Gramocollected>true</Gramocollected>
+    </gramophone>
+    <gramophone>
+      <Gramocollected>true</Gramocollected>
+    </gramophone>
+    <gramophone>
+      <Gramocollected>false</Gramocollected>
+    </gramophone>
+    <gramophone>
+      <Gramocollected>true</Gramocollected>
+    </gramophone>
+  </gramophones>
+</root>
