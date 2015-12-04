@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿// Authors : François Deramaux
+// Creation : 12/2015
+
+using UnityEngine;
 using System.Collections;
 
 public class AmmoManager : MonoBehaviour 
@@ -7,15 +10,10 @@ public class AmmoManager : MonoBehaviour
 	// AmmoManager manage the ammunition interface. It needs prefabs icons.
 
 
-	#region public properties
-		
-		public GameObject m_player;					// Player (with Tag "Player" in Unity)
-		public GameObject[] m_icons;				// Array of icons representing player's amunition. Order of icons is important.
+	#region public properties		
 
 		public string m_effectivePlayerAmmo;		// Effective player's amunition. Only for test to simulate the switch of ammo. Replace every mention by "player.getSelectedAmmo()"
-		public Material m_colorFilled;				// Only for test to simulate the filled icon.
-		public Material m_colorEmpty;				// Only for test to simulate the empty icon.
-
+		
 	#endregion
 
 
@@ -25,10 +23,25 @@ public class AmmoManager : MonoBehaviour
 		{
 			// Player initialization
 			m_player = GameObject.FindGameObjectWithTag ("Player");
-			setPlayerAmmo("pushWave");
+			setPlayerAmmo(m_effectivePlayerAmmo);
 			// Camera initialization
-			camera = Camera.main.transform;
+			camera = GameObject.FindGameObjectWithTag("Interface").GetComponent<Camera>().transform;
 			previousCameraPosition = camera.transform.position;
+			// Icons initialization
+			float totalAmmoIcons = 2.0f;
+			icons = new GameObject[(int)totalAmmoIcons];
+			for (int i = 0; i < totalAmmoIcons; i++)
+			{
+				icons[i] = GameObject.FindGameObjectWithTag("AmmoIcon" + (i+1));
+				if (i % 2 == 0)
+				{
+					icons[i].GetComponent<SpriteRenderer>().enabled = true;
+				}
+				else
+				{
+					icons[i].GetComponent<SpriteRenderer>().enabled = false;
+				}
+			}
 		}
 
 		void Update () 
@@ -36,7 +49,7 @@ public class AmmoManager : MonoBehaviour
 			// Listener for player's ammo
 			string newPlayerAmmo = m_effectivePlayerAmmo;
 
-			if (newPlayerAmmo != getPlayerAmmo() && (newPlayerAmmo == "pushWave" || newPlayerAmmo == "destroyWave"))
+			if (newPlayerAmmo != getPlayerAmmo() && (newPlayerAmmo == "PushWave" || newPlayerAmmo == "DestroyWave"))
 			{
 				switchAmmo(newPlayerAmmo);
 			} 
@@ -46,28 +59,29 @@ public class AmmoManager : MonoBehaviour
 		}
 
 		public void switchAmmo (string newAmmo)
-		{	
-			if (newAmmo == "pushWave") 
-			{	
-				m_icons [0].GetComponent<Renderer> ().material = m_colorFilled;
-				m_icons [1].GetComponent<Renderer> ().material = m_colorEmpty;
-				setPlayerAmmo("pushWave");
+		{    
+			if (newAmmo == "PushWave") 
+			{    
+				icons [0].GetComponent<SpriteRenderer> ().enabled = true;
+				icons [1].GetComponent<SpriteRenderer> ().enabled = false;
+				setPlayerAmmo("PushWave");
 			} 
 			else 
 			{
-				m_icons [1].GetComponent<Renderer> ().material = m_colorFilled;
-				m_icons [0].GetComponent<Renderer> ().material = m_colorEmpty;
-				setPlayerAmmo("destroyWave");
+				icons [1].GetComponent<SpriteRenderer> ().enabled = true;
+				icons [0].GetComponent<SpriteRenderer> ().enabled = false;
+				setPlayerAmmo("DestroyWave");
 			}
 		}
 
+
 		public void cameraFollow()
-		{		
-			for (int i = 0; i < m_icons.Length; i++) 
+		{			
+			for (int i = 0; i < icons.Length; i++) 
 			{
-				float posX = (camera.transform.position.x - previousCameraPosition.x) + m_icons[i].transform.position.x;
-				m_icons[i].transform.position = new Vector3 (posX, m_icons[i].transform.position.y, m_icons[i].transform.position.z);
-			}			
+				float posX = (camera.transform.position.x - previousCameraPosition.x) + icons[i].transform.position.x;
+				icons[i].transform.position = new Vector3 (posX, icons[i].transform.position.y, icons[i].transform.position.z);			
+			}
 			previousCameraPosition = camera.transform.position;
 		}
 
@@ -85,11 +99,11 @@ public class AmmoManager : MonoBehaviour
 		{
 			switch (newAmmo) 
 			{
-				case "pushWave" :
-					playerAmmo = "pushWave";
+				case "PushWave" :
+					playerAmmo = "PushWave";
 					break;
-				case "destroyWave" :
-					playerAmmo = "destroyWave";
+				case "DestroyWave" :
+					playerAmmo = "DestroyWave";
 					break;
 				default : 
 					break;
@@ -101,7 +115,10 @@ public class AmmoManager : MonoBehaviour
 	
 	#region private properties
 	
-		private string playerAmmo;				// Player's ammunition. Can be "pushWave" or "destroyWave"
+		private GameObject m_player;					// Player (with Tag "Player" in Unity)
+		private string playerAmmo;						// Player's ammunition. Can be "pushWave" or "destroyWave"
+		private GameObject[] icons;						// icons representing player's amunition.
+
 		private Transform camera;  
 		private Vector3 previousCameraPosition;
 	

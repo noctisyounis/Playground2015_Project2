@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿// Authors : François Deramaux
+// Creation : 12/2015
+
+using UnityEngine;
 using System.Collections;
 
 public class LifeManager : MonoBehaviour 
@@ -8,16 +11,8 @@ public class LifeManager : MonoBehaviour
 
 
 	#region public properties
-	
-		public GameObject m_player;				// Player (with Tag "Player" in Unity)
-		public int m_maxPlayerLife = 3;			// The maximum of lifes the player can reach
-		public GameObject[] m_icons;				// Array of icons representing player's life. Order of icons is important.
-		public float m_displayDelay = 3.0f;		// Time in seconds while the life points will be displayed
 
-		public int m_effectivePlayerLife;			// Effective player's life. Only for test to simulate the win or lost of lifes. Replace every mention by "player.getLife()"
-		public Color m_colorFilled;				// Only for test to simulate the filled icon.
-		public Color m_colorEmpty;				// Only for test to simulate the empty icon.
-		public Color m_colorTransparent;			// Only for test to simulate the transparent icon.
+		public float m_effectivePlayerLife;			// Effective player's life. Only for test to simulate the win or lost of lifes. Replace every mention by "player.getLife()"
 
 	#endregion
 
@@ -27,42 +22,47 @@ public class LifeManager : MonoBehaviour
 		void Start ()
 		{
 			// Player initialization
-			m_player = GameObject.FindGameObjectWithTag ("Player");
+			player = GameObject.FindGameObjectWithTag ("Player");
 			setPlayerLife(m_effectivePlayerLife);
 			// Camera initialization
-			camera = Camera.main.transform;
+			camera = GameObject.FindGameObjectWithTag("Interface").GetComponent<Camera>().transform;
 			previousCameraPosition = camera.transform.position;
-			// Icons display
-			hideCoroutine = hideLifePointsAfter(m_displayDelay);
-			iconsShown = false;
-			showLifePoints ();
-			StartCoroutine(hideCoroutine);
+			// Icons initialization
+			float totalIcons = (int)getMaxPlayerLife () * 2;
+			icons = new GameObject[(int)totalIcons];
+			for (int i = 0; i < totalIcons; i++) {
+				icons[i] = GameObject.FindGameObjectWithTag("LifeIcon" + (i+1));
+				if (i % 2 == 0)
+				{
+					icons[i].GetComponent<SpriteRenderer>().enabled = true;
+				}
+				else
+				{
+					icons[i].GetComponent<SpriteRenderer>().enabled = false;
+				}
+			}			
 		}
 
 		void Update () 
 		{
 			// Listener for player's life points
-			int newPlayerLife = m_effectivePlayerLife;
+			float newPlayerLife = m_effectivePlayerLife;
 
 			if (newPlayerLife != getPlayerLife())
 			{
 				if (newPlayerLife > getPlayerLife()) 
 				{
-					showLifePoints();
-					while (newPlayerLife != getPlayerLife() && getPlayerLife() <= m_maxPlayerLife - 1)
+					while (newPlayerLife != getPlayerLife() && getPlayerLife() <= maxPlayerLife - 1)
 					{
 						winLife();
 					}
-					updateCoroutine(hideCoroutine);
 				}
 				else 
 				{
-					showLifePoints();
 					while (newPlayerLife != getPlayerLife() && getPlayerLife() >= 1)
 					{
 						looseLife();
 					}
-					updateCoroutine(hideCoroutine);
 				}
 			} 
 			
@@ -72,61 +72,26 @@ public class LifeManager : MonoBehaviour
 
 		public void winLife()
 		{
-			m_icons[getPlayerLife()].GetComponent<Renderer>().material.color = m_colorFilled;
-			setPlayerLife(getPlayerLife() + 1);
+			int iconToFill = (int)getPlayerLife () * 2;
+			icons [iconToFill].GetComponent<SpriteRenderer> ().enabled = true;
+			icons [iconToFill+1].GetComponent<SpriteRenderer> ().enabled = false;
+			setPlayerLife(getPlayerLife() + 1.0f);
 		}
 		
 		public void looseLife()
 		{
-			m_icons[getPlayerLife() - 1].GetComponent<Renderer>().material.color = m_colorEmpty;
-			setPlayerLife(getPlayerLife() - 1);
-		}
-
-		public void showLifePoints()
-		{
-			if (!iconsShown) 
-			{
-				for (int i = 0; i < m_icons.Length; i++) 
-				{
-					if (i < getPlayerLife ()) 
-					{
-						m_icons [i].GetComponent<Renderer> ().material.color = m_colorFilled;
-					} 
-					else 
-					{
-						m_icons [i].GetComponent<Renderer> ().material.color = m_colorEmpty;
-					}			
-				}
-				iconsShown = true;
-			}
-		}
-	
-		public IEnumerator hideLifePointsAfter(float seconds)
-		{
-			yield return new WaitForSeconds(seconds);
-			for (int i = 0; i < m_icons.Length; i++)
-			{
-				m_icons[i].GetComponent<Renderer>().material.color = m_colorTransparent;			
-			}
-			iconsShown = false;
-		}
-
-		public void updateCoroutine (IEnumerator oldCoroutine)
-		{	
-			if (iconsShown) 
-			{	
-				StopCoroutine (oldCoroutine);
-				hideCoroutine = hideLifePointsAfter (m_displayDelay);
-				StartCoroutine (hideCoroutine);
-			}
+			int iconToEmpty = (int)getPlayerLife () * 2 - 2;
+			icons [iconToEmpty+1].GetComponent<SpriteRenderer> ().enabled = true;
+			icons [iconToEmpty].GetComponent<SpriteRenderer> ().enabled = false;
+			setPlayerLife(getPlayerLife() - 1.0f);
 		}
 
 		public void cameraFollow()
 		{		
-			for (int i = 0; i < m_icons.Length; i++) 
+			for (int i = 0; i < icons.Length; i++) 
 			{
-				float posX = (camera.transform.position.x - previousCameraPosition.x) + m_icons[i].transform.position.x;
-				m_icons[i].transform.position = new Vector3 (posX, m_icons[i].transform.position.y, m_icons[i].transform.position.z);
+				float posX = (camera.transform.position.x - previousCameraPosition.x) + icons[i].transform.position.x;
+				icons[i].transform.position = new Vector3 (posX, icons[i].transform.position.y, icons[i].transform.position.z);
 			}			
 			previousCameraPosition = camera.transform.position;
 		}
@@ -136,16 +101,29 @@ public class LifeManager : MonoBehaviour
 
 	#region accessors
 
-		public int getPlayerLife()
+		public float getPlayerLife()
 		{
 			return playerLife;
 		}
 		
-		public void setPlayerLife(int newPlayerLife)
+		public void setPlayerLife(float newPlayerLife)
 		{
-			if (newPlayerLife >= 0 && newPlayerLife <= m_maxPlayerLife) 
+			if (newPlayerLife >= 0 && newPlayerLife <= maxPlayerLife) 
 			{
-				playerLife = newPlayerLife;
+			playerLife = newPlayerLife;
+			}
+		}
+	
+		public float getMaxPlayerLife()
+		{
+			return maxPlayerLife;
+		}
+		
+		public void setMaxPlayerLife(float newMaxPlayerLife)
+		{
+			if (newMaxPlayerLife >= 0) 
+			{
+				maxPlayerLife = newMaxPlayerLife;
 			}
 		}
 
@@ -154,10 +132,11 @@ public class LifeManager : MonoBehaviour
 	
 	#region private properties
 	
-		private int playerLife;					// Player's life. Between 0 and maxPlayerLife	
-		
-		private IEnumerator hideCoroutine;		// Coroutine to hide the icons
-		private bool iconsShown;				// Display of icons
+		private GameObject player;					// Player (with Tag "Player" in Unity)
+		private float playerLife;					// Player's life. Between 0 and maxPlayerLife		
+		private float maxPlayerLife;				// The maximum of lifes the player can reach	
+		private GameObject[] icons;					// Array of icons representing player's life. Order of icons is important.
+
 		private Transform camera;  
 		private Vector3 previousCameraPosition;
 	

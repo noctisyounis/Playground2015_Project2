@@ -9,7 +9,7 @@ public class BlockBehaviour : MonoBehaviour
     #region Public Properties
     [Range(0.0f,0.4f)]
     public float m_shakeIntensity;
-    [Range(2000f,5000f)]
+    [Range(8000f,14000f)]
     public float m_forceMove;
     #endregion
 

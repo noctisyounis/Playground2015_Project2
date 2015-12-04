@@ -1,70 +1,108 @@
-﻿using UnityEngine;
+// Authors : François Deramaux
+// Creation : 12/2015
+
+using UnityEngine;
 using System.Collections;
 
 public class DustManager : MonoBehaviour 
 {
-	// DustManager manage the count of dust the player pick up
-
-
-	#region public properties
-
-		public GameObject m_player;				// Player (with Tag "Player" in Unity)
-	private int playerDust;					// Player's dust amount. Betxeen 0 and maxDust
-	public float maxDust = 100.0f;				// The maximum of dust the player can pick up;
-	public int effectivePlayerDust;			// Effective player's dust amount. Only for test to simulate the win of dust. Replace every mention by "player.getDust()"
-	
-	private BWEffect shader;				// B&W effect
-
-	#endregion
+	// DustManager manage the collected dust. Each dust is unique and has a proper index. Dust are not showed on interface but influence the grayscale background effect.
 
 
 	#region main methods
 
-		void Start () 
-		{		
-			// Player initialization
-			m_player = GameObject.FindGameObjectWithTag ("Player");
-			setPlayerDust(effectivePlayerDust);
-			// Shader initialization
-			shader = Camera.main.GetComponent<BWEffect>();
-			updateShader ();
+		void Start ()
+		{
+			// Dust initialization
+			initializeDust ();
+		}	
+	
+		private void initializeDust()
+		{
+			// Get each dust on the level
+			GameObject[] dust = GameObject.FindGameObjectsWithTag ("Dust");
+			setDustTotal(dust.Length);
+
+			float totalSavedCollectedDust = 0f;
+			for (int i = 0; i < dustTotal; i++)
+			{
+				// Get the saved collected properties
+				bool dustIsCollected = getCollectedDust()[i];
+
+				// Set properties on each component
+				dust[i].GetComponent<DustBehaviour>().setDustIndex(i);
+				dust[i].GetComponent<DustBehaviour>().setCollected(dustIsCollected);
+
+				// Update the total collected dust
+				if(dustIsCollected)
+				{
+					totalSavedCollectedDust++;
+				}
+			}
+			setTotalCollectedDust(totalSavedCollectedDust);			
 		}
 		
-		void Update () 
-		{
-			// Listener for player's dust
-			int newPlayerDust = effectivePlayerDust;
-			
-			if (newPlayerDust != getPlayerDust())
-			{
-				setPlayerDust(newPlayerDust);
-				updateShader();
-			} 	
+		public void collectDust(float dustIndex)
+		{		
+			setCollectedDust(dustIndex,true);
+			setTotalCollectedDust (getTotalCollectedDust () + 1);
 		}
 
-		public void updateShader()
+	#endregion
+
+	#region accessors
+		
+		public float getDustTotal()
+		{	
+			return dustTotal;
+		}
+		
+		public void setDustTotal(float newTotal)
 		{
-			float shaderIntensity = 1-((1 / maxDust) * getPlayerDust ());
-			shader.setIntensity(shaderIntensity);
+			if (newTotal >= 0) {
+				dustTotal = newTotal;
+			}
+		}
+		
+		public bool[] getCollectedDust()
+		{
+			return collectedDust;
+		}
+		
+		public void setCollectedDust(float dustIndex, bool isCollected)
+		{
+			if (dustIndex >= 0 && dustIndex < dustTotal) 
+			{
+				collectedDust[(int)dustIndex] = isCollected;
+			}
+		}
+		
+		public void setAllCollectedDust(bool[] collection)
+		{
+			collectedDust = collection;
+		}
+		
+		public float getTotalCollectedDust()
+		{
+			return totalCollectedDust;
+		}
+		
+		public void setTotalCollectedDust(float newCollectedDust)
+		{
+			if (newCollectedDust >= 0 && newCollectedDust <= dustTotal) 
+			{
+				totalCollectedDust = newCollectedDust;
+			}
 		}
 
 	#endregion
 
 
-	#region accessors
+	#region private properties
 
-		public int getPlayerDust()
-		{
-			return playerDust;
-		}
-		
-		public void setPlayerDust(int newPlayerDust)
-		{
-			if (newPlayerDust >= 0 && newPlayerDust <= maxDust) 
-			{
-				playerDust = newPlayerDust;
-			}
-		}
+		private float dustTotal;					// Total of dust in the level
+		private bool[] collectedDust;				// Player's actual collected dust. Each array location represent one dust;
+		private float totalCollectedDust;			// Total of collected dust;
 
 	#endregion
 }

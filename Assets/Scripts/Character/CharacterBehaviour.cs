@@ -59,11 +59,10 @@ public class CharacterBehaviour : MonoBehaviour
                 Move();
                 Jump();
 
-                if (m_stateChanged)
-                { 
-                    m_Animator.CrossFade("Idle",0.1f);
+            
+                    m_Animator.Play("Idle");
                     m_stateChanged = false;
-                }
+             
 
                 StartCoroutine(Shoot());
 
@@ -73,30 +72,29 @@ public class CharacterBehaviour : MonoBehaviour
             case PlayerState.Walk :
                 Move(); // IMPORTANT !  When the character is walking, he must be able to continue to walk (at the next frame) !!
                 Jump();
-                if(m_stateChanged)
-                { 
-                    m_Animator.CrossFade("Walk",0.1f);
+            
+                    m_Animator.Play("Walk");
                     m_stateChanged = false;
-                }
+                
                 ChangeState();
                 break;
 
             case PlayerState.Jump :
                 ApplyGravity();
                 Move();
-                if (m_stateChanged)
-                {
+             
                     m_Animator.Play("Jump");
-                }
+                
                 ChangeState();
                 break;
 
             case PlayerState.Shoot :
-                if(m_stateChanged)
-                { 
-                    m_Animator.CrossFade("Shoot",0.1f);
+
+                    m_Animator.Play("Shoot");
                     m_stateChanged = false;
-                }
+
+                    
+                
                 ChangeState();
                 break;
 
@@ -167,7 +165,7 @@ public class CharacterBehaviour : MonoBehaviour
             // Apply force and direction to the Wave velocity
             WavePrefab.GetComponent<Rigidbody2D>().velocity = ShootDirection * m_ShootForce;
             // Delay to close animation
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(0.485f);
 
             m_IsShooting = false;
 
@@ -180,7 +178,7 @@ public class CharacterBehaviour : MonoBehaviour
         {
             if (CheckWalk())
             {
-                m_previousState = m_playerState;
+    
                 m_playerState = PlayerState.Walk;
             }
 
@@ -192,20 +190,17 @@ public class CharacterBehaviour : MonoBehaviour
 
             else
             {
-                m_previousState = m_playerState;
+
                 m_playerState = PlayerState.Idle;
             }
         }
         else
         {
-            m_previousState = m_playerState;
+
             m_playerState = PlayerState.Jump;
         }
 
-        if(m_playerState != m_previousState)
-        {
-            m_stateChanged = true;
-        }
+
     }
 
     void CheckFacingDirection(float Axis)
