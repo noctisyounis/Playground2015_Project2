@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 32f312e23108f2c4686248016f1446f7
-timeCreated: 1449157354
+timeCreated: 1449232648
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -18,6 +18,8 @@ TextureImporter:
     21300022: LevelAssets_Spike
     21300024: LevelAssets_SpikeTall
     21300026: LevelAssets_Piston
+    21300028: LevelAssets_BrickBlueBG
+    21300030: LevelAssets_BrickPurpleBG
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -201,6 +203,26 @@ TextureImporter:
         y: 40
         width: 72
         height: 108
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LevelAssets_BrickBlueBG
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 2
+        width: 36
+        height: 36
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LevelAssets_BrickPurpleBG
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 2
+        width: 36
+        height: 36
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
