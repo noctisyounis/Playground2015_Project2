@@ -42,6 +42,7 @@ public class CharacterBehaviour : MonoBehaviour
     {
         m_playerState = PlayerState.Idle;
         m_rgbd = GetComponent<Rigidbody2D>();
+        m_boxColl = GetComponent<BoxCollider2D>();
         m_FacingRight = true;
         m_Animator = GetComponentInChildren<Animator>();
         m_SelectedAmmo = Ammo.DestroyWave;
@@ -59,11 +60,9 @@ public class CharacterBehaviour : MonoBehaviour
                 Move();
                 Jump();
 
-            
-                    m_Animator.Play("Idle");
-                    m_stateChanged = false;
+                m_Animator.Play("Idle");
+                m_stateChanged = false;
              
-
                 StartCoroutine(Shoot());
 
                 ChangeState();
@@ -117,7 +116,6 @@ public class CharacterBehaviour : MonoBehaviour
 
         if (Mathf.Abs(Axis) > 0)
         {
-            //m_Animator.Play("Walk");
             m_rgbd.velocity = new Vector2(Axis * m_MoveSpeed, m_rgbd.velocity.y);
         }
 
@@ -127,7 +125,8 @@ public class CharacterBehaviour : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            m_rgbd.AddForce(new Vector2(m_rgbd.velocity.x, m_JumpForce));
+            Vector2 AddJumpForce = new Vector2((m_rgbd.velocity.x), m_JumpForce);
+            m_rgbd.AddForce(AddJumpForce);
         }
     }
 
@@ -230,6 +229,8 @@ public class CharacterBehaviour : MonoBehaviour
         bool IsGroundedCenter;
         bool IsGroundedRight;
         bool IsGroundedLeft;
+
+        float ColSizeX = m_boxColl.size.x;
 
         // Calcul a clipping compared to Center groundcheck
         Vector3 DecalPos = new Vector3(0.35f, 0, 0);
@@ -353,6 +354,7 @@ public class CharacterBehaviour : MonoBehaviour
 
     #region Private properties
     Rigidbody2D m_rgbd;
+    BoxCollider2D m_boxColl;
     InputManager m_inputMngr;
     float Axis;
     bool m_FacingRight;

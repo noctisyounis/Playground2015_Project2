@@ -18,7 +18,7 @@ using System.Collections;
 
         void OnTriggerEnter2D(Collider2D other)
         {
-            if (!other.CompareTag("Character"))
+            if (!other.CompareTag("Player"))
             {
                 // TODO : Fade Out
                 Destroy(gameObject);

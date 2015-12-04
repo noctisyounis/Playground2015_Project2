@@ -5,20 +5,20 @@ public class EnemyBehaviour : MonoBehaviour {
 
 
     #region Public properties
-    public GameObject m_player;
+    
     #endregion
 
     #region Main methods
     void Start ()
     {
+        m_player = GameObject.FindGameObjectWithTag("Player");
         m_character = m_player.GetComponent<CharacterBehaviour>();
         m_characterPosition = m_character.transform.position;
-
     }	
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Character"))
+        if (collision.gameObject.CompareTag("Player"))
         {
             m_character.AddPV(-1);
 
@@ -62,6 +62,7 @@ public class EnemyBehaviour : MonoBehaviour {
     #endregion
 
     #region Private properties
+    GameObject m_player;
     CharacterBehaviour m_character;
     Vector2 m_characterPosition;
     #endregion
