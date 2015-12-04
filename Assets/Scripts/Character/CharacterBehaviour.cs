@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEditor;
 
 public class CharacterBehaviour : MonoBehaviour
 {
@@ -345,11 +344,6 @@ public class CharacterBehaviour : MonoBehaviour
     void Death()
     {
         Destroy(gameObject);
-
-        //string MsgTitre = "Mort";
-        //string MsgContent = "Vous êtes mort";
-        //string MsgOk = "Ok";
-        //EditorUtility.DisplayDialog(MsgTitre, MsgContent, MsgOk);
 
         // Respawn ..
     }

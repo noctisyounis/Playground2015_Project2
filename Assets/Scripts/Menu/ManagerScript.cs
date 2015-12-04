@@ -59,10 +59,7 @@ public class ManagerScript : MonoBehaviour
 				{
 					if (framePopUp.name!="ButtonRejouerFinishMint")   
 					{	framePopUp.SetActive (true);
-						
-
 					}
-
 				}
 
 				msgPopUp = true;

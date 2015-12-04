@@ -1,0 +1,130 @@
+Mono path[0] = 'C:/Users/Student/Documents/GitHub/Playground2015_Project2/Build/testBuild/DustNGroove_Alpha_Data/Managed'
+Mono path[1] = 'C:/Users/Student/Documents/GitHub/Playground2015_Project2/Build/testBuild/DustNGroove_Alpha_Data/Mono'
+Mono config path = 'C:/Users/Student/Documents/GitHub/Playground2015_Project2/Build/testBuild/DustNGroove_Alpha_Data/Mono/etc'
+PlayerConnection initialized from C:/Users/Student/Documents/GitHub/Playground2015_Project2/Build/testBuild/DustNGroove_Alpha_Data (debug = 0)
+PlayerConnection initialized network socket : 0.0.0.0 55210
+Multi-casting "[IP] 10.10.1.52 [Port] 55210 [Flags] 3 [Guid] 2907513958 [EditorId] 755296065 [Version] 1048832 [Id] WindowsPlayer(Technobel) [Debug] 1" to [225.0.0.222:54997]...
+Waiting for connection from host on [10.10.1.52:55210]...
+PlayerConnection accepted from [10.10.1.56] handle:0x1b8
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,defer=y,address=0.0.0.0:56958
+PlayerConnection already initialized - listening to [10.10.1.52:55210]
+Initialize engine version: 5.2.2f1 (3757309da7e7)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: NVIDIA GeForce GT 610  (ID=0x104a)
+    Vendor:   NVIDIA
+    VRAM:     2000 MB
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\Student\Documents\GitHub\Playground2015_Project2\Build\testBuild\DustNGroove_Alpha_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\Student\Documents\GitHub\Playground2015_Project2\Build\testBuild\DustNGroove_Alpha_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\Student\Documents\GitHub\Playground2015_Project2\Build\testBuild\DustNGroove_Alpha_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\Student\Documents\GitHub\Playground2015_Project2\Build\testBuild\DustNGroove_Alpha_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\Student\Documents\GitHub\Playground2015_Project2\Build\testBuild\DustNGroove_Alpha_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\Student\Documents\GitHub\Playground2015_Project2\Build\testBuild\DustNGroove_Alpha_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\Student\Documents\GitHub\Playground2015_Project2\Build\testBuild\DustNGroove_Alpha_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\Student\Documents\GitHub\Playground2015_Project2\Build\testBuild\DustNGroove_Alpha_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\Student\Documents\GitHub\Playground2015_Project2\Build\testBuild\DustNGroove_Alpha_Data\Managed\System.Core.dll (this message is harmless)
+- Completed reload, in  0.036 seconds
+desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+Platform assembly: C:\Users\Student\Documents\GitHub\Playground2015_Project2\Build\testBuild\DustNGroove_Alpha_Data\Managed\System.dll (this message is harmless)
+The referenced script on this Behaviour is missing!
+ 
+(Filename: C:/buildslave/unity/build/Runtime/Mono/MonoBehaviour.cpp Line: 1649)
+
+Setting up 1 worker threads for Enlighten.
+  Thread -> id: 1a04 -> priority: 1 
+The referenced script on this Behaviour is missing!
+ 
+(Filename: C:/buildslave/unity/build/Runtime/Mono/MonoBehaviour.cpp Line: 1649)
+
+Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 11.016862 ms
+System memory in use before: 19.9 MB.
+System memory in use after: 19.9 MB.
+
+Unloading 4 unused Assets to reduce memory usage. Loaded Objects now: 314.
+Total: 0.559520 ms (FindLiveObjects: 0.044164 ms CreateObjectMapping: 0.026436 ms MarkObjects: 0.469325 ms  DeleteObjects: 0.014928 ms)
+
+IndexOutOfRangeException: Array index is out of range.
+  at ScriptManageButtonLevelSelection.InitialiseButtonNiveau () [0x0002a] in C:\Users\Student\Documents\GitHub\Playground2015_Project2\Assets\Scripts\Menu\ScriptManageButtonLevelSelection.cs:45 
+  at ScriptManageButtonLevelSelection.Start () [0x00062] in C:\Users\Student\Documents\GitHub\Playground2015_Project2\Assets\Scripts\Menu\ScriptManageButtonLevelSelection.cs:33 
+ 
+(Filename: C:/Users/Student/Documents/GitHub/Playground2015_Project2/Assets/Scripts/Menu/ScriptManageButtonLevelSelection.cs Line: 45)
+
+The referenced script on this Behaviour is missing!
+ 
+(Filename: C:/buildslave/unity/build/Runtime/Mono/MonoBehaviour.cpp Line: 1649)
+
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 1.749162 ms
+System memory in use before: 20.1 MB.
+System memory in use after: 20.1 MB.
+
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 234.
+Total: 0.423294 ms (FindLiveObjects: 0.038255 ms CreateObjectMapping: 0.015239 ms MarkObjects: 0.350516 ms  DeleteObjects: 0.017105 ms)
+
+The referenced script on this Behaviour is missing!
+ 
+(Filename: C:/buildslave/unity/build/Runtime/Mono/MonoBehaviour.cpp Line: 1649)
+
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 1.418550 ms
+System memory in use before: 23.7 MB.
+System memory in use after: 23.7 MB.
+
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 325.
+Total: 0.673041 ms (FindLiveObjects: 0.045097 ms CreateObjectMapping: 0.025503 ms MarkObjects: 0.582224 ms  DeleteObjects: 0.018039 ms)
+
+IndexOutOfRangeException: Array index is out of range.
+  at ScriptManageButtonLevelSelection.InitialiseButtonNiveau () [0x0002a] in C:\Users\Student\Documents\GitHub\Playground2015_Project2\Assets\Scripts\Menu\ScriptManageButtonLevelSelection.cs:45 
+  at ScriptManageButtonLevelSelection.Start () [0x00062] in C:\Users\Student\Documents\GitHub\Playground2015_Project2\Assets\Scripts\Menu\ScriptManageButtonLevelSelection.cs:33 
+ 
+(Filename: C:/Users/Student/Documents/GitHub/Playground2015_Project2/Assets/Scripts/Menu/ScriptManageButtonLevelSelection.cs Line: 45)
+
+The referenced script on this Behaviour is missing!
+ 
+(Filename: C:/buildslave/unity/build/Runtime/Mono/MonoBehaviour.cpp Line: 1649)
+
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 2.169658 ms
+System memory in use before: 20.2 MB.
+System memory in use after: 20.2 MB.
+
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 234.
+Total: 0.818909 ms (FindLiveObjects: 0.058160 ms CreateObjectMapping: 0.023637 ms MarkObjects: 0.709119 ms  DeleteObjects: 0.024570 ms)
+
+The referenced script on this Behaviour is missing!
+ 
+(Filename: C:/buildslave/unity/build/Runtime/Mono/MonoBehaviour.cpp Line: 1649)
+
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 1.159784 ms
+System memory in use before: 23.8 MB.
+System memory in use after: 20.3 MB.
+
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 325.
+Total: 0.769768 ms (FindLiveObjects: 0.050695 ms CreateObjectMapping: 0.031723 ms MarkObjects: 0.665266 ms  DeleteObjects: 0.019905 ms)
+
+IndexOutOfRangeException: Array index is out of range.
+  at ScriptManageButtonLevelSelection.InitialiseButtonNiveau () [0x0002a] in C:\Users\Student\Documents\GitHub\Playground2015_Project2\Assets\Scripts\Menu\ScriptManageButtonLevelSelection.cs:45 
+  at ScriptManageButtonLevelSelection.Start () [0x00062] in C:\Users\Student\Documents\GitHub\Playground2015_Project2\Assets\Scripts\Menu\ScriptManageButtonLevelSelection.cs:33 
+ 
+(Filename: C:/Users/Student/Documents/GitHub/Playground2015_Project2/Assets/Scripts/Menu/ScriptManageButtonLevelSelection.cs Line: 45)
+
+The referenced script on this Behaviour is missing!
+ 
+(Filename: C:/buildslave/unity/build/Runtime/Mono/MonoBehaviour.cpp Line: 1649)
+
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 2.253010 ms
+System memory in use before: 20.2 MB.
+System memory in use after: 20.2 MB.
+
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 234.
+Total: 0.599952 ms (FindLiveObjects: 0.055361 ms CreateObjectMapping: 0.022393 ms MarkObjects: 0.497005 ms  DeleteObjects: 0.022082 ms)
+
+Waiting for finish

@@ -7,8 +7,9 @@ public class ScriptSelectNiveau : MonoBehaviour {
 	const int Spaces = 10;
 
 
+
     public void OnMouseDown()
-    {
+	{		
 		Application.LoadLevel ("SceneLevel1");
 
     }  

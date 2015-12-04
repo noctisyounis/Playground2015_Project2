@@ -4,8 +4,8 @@ using System.Collections;
 public class ScriptPlatFormMoveHorizontal : MonoBehaviour {
 
 	public string m_plateFormName;
-	public float m_interSecondePlatForm;
-	public float m_posX;
+	public float m_interSecondePlatForm; 
+	public float m_posX; // the point (m_posX,m_pos) will move to the right first
 	public float m_posY;
 	
 	private GameObject  tempPlatForm ;
@@ -20,7 +20,7 @@ public class ScriptPlatFormMoveHorizontal : MonoBehaviour {
 	private float DistancePlateForm = 2.0f;
 	private float posX2;
 	
-	
+
 	void Start () 
 	{	positionX = m_posX;
 		positionY = m_posY;
@@ -30,9 +30,9 @@ public class ScriptPlatFormMoveHorizontal : MonoBehaviour {
 		
 		platformState = statePistonArray.PlatformRight;
 		tempPlatForm = GameObject.Find(m_plateFormName);
-		//	tempPlatForm=(Transform)Instantiate(m_piston, new Vector3(positionX, positionY, 0), Quaternion.identity);
-		
-		timeCompter = 0;
+		tempPlatForm.transform.position = new Vector3(positionX,positionY, 0);
+	
+	//	timeCompter = 0;
 	}
 	
 	

@@ -1,10 +1,10 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class ScriptPlatMoveVert : MonoBehaviour {
 	public string m_plateFormName;
 	public float m_interSecondePlatForm;
-	public float m_posX;
+	public float m_posX; // the point (m_posX,m_pos) will move up first
 	public float m_posY;
 	
 	private GameObject tempPlatForm ;
@@ -30,7 +30,7 @@ public class ScriptPlatMoveVert : MonoBehaviour {
 		
 		platFormState = statePistonArray.PlatFormUp;
 		tempPlatForm = GameObject.Find(m_plateFormName);
-		//	tempPlatForm=(Transform)Instantiate(m_piston, new Vector3(positionX, positionY, 0), Quaternion.identity);
+		tempPlatForm.transform.position = new Vector3(positionX,positionY, 0);
 		timeCompter = 0;
 	}
 	

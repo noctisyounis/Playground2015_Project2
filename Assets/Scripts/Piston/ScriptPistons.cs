@@ -5,11 +5,12 @@ public class ScriptPistons : MonoBehaviour {
 
 	public string m_pistonName;
 	public float m_interSecondePiston;
+	public float m_SecBeforeStartPiston;
 	public float m_posX;
 	public float m_posY;
 
 	private GameObject tempPiston;
-	private float positionX;
+	private float positionX;  
 	private float positionY;
 
 
@@ -19,6 +20,7 @@ public class ScriptPistons : MonoBehaviour {
 	private statePistonArray pistonState1;
 	private const float speedPiston=0.1f;
 	private float DistancePiston = 2.0f;
+	private bool alreadyStart;
 
 
 	
@@ -26,13 +28,14 @@ public class ScriptPistons : MonoBehaviour {
 	void Start () 
 	{	positionX = m_posX;
 		positionY = m_posY;
-
+		alreadyStart = false;
 		m_interSecondePiston = m_interSecondePiston*60; 
+		m_SecBeforeStartPiston = m_SecBeforeStartPiston * 60;
 
 		pistonState1 = statePistonArray.PistonPause;
 		tempPiston = GameObject.Find(m_pistonName);
-	//	tempPiston=(Transform)Instantiate(m_piston, new Vector3(positionX, positionY, 0), Quaternion.identity);
-		Debug.Log (tempPiston.name );	
+
+		tempPiston.transform.position = new Vector3(positionX,positionY, 0);
 		timeCompter = 0;
 	}
 	
@@ -41,7 +44,12 @@ public class ScriptPistons : MonoBehaviour {
 	void FixedUpdate () 
 	{	
 		timeCompter += 1;
-		PistonManager ();
+		if (((timeCompter ) > m_SecBeforeStartPiston) || (alreadyStart==true)) 
+		{	
+			alreadyStart=true;
+			PistonManager ();	
+		}
+
 	}
 
 	void OnTriggerEnter2D (Collider2D other)
