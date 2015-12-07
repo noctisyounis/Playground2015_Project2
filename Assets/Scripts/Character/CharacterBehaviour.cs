@@ -5,8 +5,14 @@ public class CharacterBehaviour : MonoBehaviour
 {
 
     //      TODO :
-    //      Stop walking when shooting
-    //      Link jump animator
+    //      Desactive rub on sides
+    //      End level animation
+    //      Door animation
+    //      Sound menu
+    //      Sound effects (shoot x 2, jump?)
+    //      Camera ?
+    //      LifeNote => like a dust baby !
+
 
     #region Public properties
     public PlayerState m_playerState;
@@ -14,10 +20,15 @@ public class CharacterBehaviour : MonoBehaviour
     public float m_MoveSpeed;
     public float m_JumpForce;
     public Transform m_GroundCheck;
+    public Transform m_CeilingCheck;
+    public Transform m_LeftWallCheck;
+    public Transform m_RightWallCheck;
     public LayerMask m_GroundLayer;
     public Ammo m_SelectedAmmo;
     public float m_gravityForce;
     public float m_ShootForce;
+    public float m_airControlRatio;
+    public float m_initialFriction;
     #endregion
 
     #region Enums
@@ -58,41 +69,34 @@ public class CharacterBehaviour : MonoBehaviour
             case PlayerState.Idle :
                 Move();
                 Jump();
-
                 m_Animator.Play("Idle");
                 m_stateChanged = false;
-             
+                m_boxColl.sharedMaterial.friction = m_initialFriction;
                 StartCoroutine(Shoot());
-
                 ChangeState();
                 break;
 
             case PlayerState.Walk :
                 Move(); // IMPORTANT !  When the character is walking, he must be able to continue to walk (at the next frame) !!
                 Jump();
-            
-                    m_Animator.Play("Walk");
-                    m_stateChanged = false;
-                
+                StartCoroutine(Shoot());
+                m_Animator.Play("Walk");
+                m_stateChanged = false;
+                m_boxColl.sharedMaterial.friction = m_initialFriction;
                 ChangeState();
                 break;
 
             case PlayerState.Jump :
                 ApplyGravity();
                 Move();
-             
-                    m_Animator.Play("Jump");
-                
+                m_boxColl.sharedMaterial.friction = 0;      // Disable friction
+                m_Animator.Play("Jump");               
                 ChangeState();
                 break;
 
             case PlayerState.Shoot :
-
-                    m_Animator.Play("Shoot");
-                    m_stateChanged = false;
-
-                    
-                
+                m_Animator.Play("Shoot");
+                m_stateChanged = false;
                 ChangeState();
                 break;
 
@@ -101,7 +105,12 @@ public class CharacterBehaviour : MonoBehaviour
         }
 
         SwitchAmmo();
-        m_CurrentPosition = transform.position;    
+
+        m_CurrentPosition = transform.position;
+
+        CheckCeiling();
+        CheckWallTouchLeft();
+        CheckWallTouchRight();      
     }
     #endregion
 
@@ -115,23 +124,31 @@ public class CharacterBehaviour : MonoBehaviour
 
         if (Mathf.Abs(Axis) > 0)
         {
+            if (!CheckGround())
+            {
+                m_rgbd.velocity = new Vector2(Axis * m_MoveSpeed * m_airControlRatio, m_rgbd.velocity.y);
+                return;
+            }
+
             m_rgbd.velocity = new Vector2(Axis * m_MoveSpeed, m_rgbd.velocity.y);
         }
+
+
 
     }
     
     void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Z))
         {
-            Vector2 AddJumpForce = new Vector2((m_rgbd.velocity.x), m_JumpForce);
+            Vector2 AddJumpForce = new Vector2(Mathf.Clamp(m_rgbd.velocity.x,-4f,4f), m_JumpForce);
             m_rgbd.AddForce(AddJumpForce);
         }
     }
 
     IEnumerator Shoot()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
         {
             m_IsShooting = true;
 
@@ -174,9 +191,8 @@ public class CharacterBehaviour : MonoBehaviour
     {
         if (CheckGround())
         {
-            if (CheckWalk())
+            if (CheckWalk() && !m_IsShooting)
             {
-    
                 m_playerState = PlayerState.Walk;
             }
 
@@ -188,7 +204,6 @@ public class CharacterBehaviour : MonoBehaviour
 
             else
             {
-
                 m_playerState = PlayerState.Idle;
             }
         }
@@ -229,23 +244,125 @@ public class CharacterBehaviour : MonoBehaviour
         bool IsGroundedRight;
         bool IsGroundedLeft;
 
-        // TODO : reposit. left and right linecasts
         float ColSizeX = m_boxColl.size.x;
 
         // Calcul a clipping compared to Center groundcheck
-        Vector3 DecalPos = new Vector3(0.35f, 0, 0);
-        Vector3 DecalNeg = new Vector3(-0.35f, 0, 0);
+        Vector3 DecalPos = new Vector3(ColSizeX*0.5f, 0, 0);
+        Vector3 DecalNeg = new Vector3(ColSizeX*0.5f*-1, 0, 0);
 
         IsGroundedCenter = Physics2D.Linecast(transform.position, m_GroundCheck.position, m_GroundLayer);
         IsGroundedRight = Physics2D.Linecast(transform.position + DecalPos, m_GroundCheck.position, m_GroundLayer);
         IsGroundedLeft = Physics2D.Linecast(transform.position + DecalNeg, m_GroundCheck.position, m_GroundLayer);
-        
+
         // --- Display lines on scene
-         Debug.DrawLine(transform.position, m_GroundCheck.position);
-         Debug.DrawLine(transform.position + DecalPos, m_GroundCheck.position + DecalPos);
-         Debug.DrawLine(transform.position + DecalNeg, m_GroundCheck.position + DecalNeg);
+        //Debug.DrawLine(transform.position, m_GroundCheck.position);
+        //Debug.DrawLine(transform.position + DecalPos, m_GroundCheck.position + DecalPos);
+        //Debug.DrawLine(transform.position + DecalNeg, m_GroundCheck.position + DecalNeg);
 
         return (IsGroundedCenter || IsGroundedRight || IsGroundedLeft);
+    }
+
+    bool CheckCeiling()
+    {
+       
+        bool IsCeilingCenter;
+        bool IsCeilingRight;
+        bool IsCeilingLeft;
+
+        float ColSizeX = m_boxColl.size.x;
+        float ColSizeY = m_boxColl.size.y;
+
+        // Calcul a clipping compared to Center Ceilingcheck
+        Vector3 DecalPos = new Vector3(ColSizeX * 0.5f, 0, 0);
+        Vector3 DecalNeg = new Vector3(ColSizeX * 0.5f * -1, 0, 0);
+
+        // Grab the player collider height and apply to position
+        Vector3 StartPoint = new Vector3(0, ColSizeY) + transform.position;
+
+        IsCeilingCenter = Physics2D.Linecast(StartPoint, m_CeilingCheck.position, m_GroundLayer);
+        IsCeilingRight = Physics2D.Linecast(StartPoint + DecalPos, m_CeilingCheck.position, m_GroundLayer);
+        IsCeilingLeft = Physics2D.Linecast(StartPoint + DecalNeg, m_CeilingCheck.position, m_GroundLayer);
+
+        // --- Display lines on scene
+        //Debug.DrawLine(StartPoint, m_CeilingCheck.position);
+        //Debug.DrawLine(StartPoint + DecalPos, m_CeilingCheck.position + DecalPos);
+        //Debug.DrawLine(StartPoint + DecalNeg, m_CeilingCheck.position + DecalNeg);
+
+        return (IsCeilingCenter || IsCeilingRight || IsCeilingLeft);
+    }
+
+    bool CheckWallTouchLeft()
+    {
+        bool IsWallTouchMiddle;
+        bool IsWallTouchTop;
+        bool IsWallTouchBottom;
+
+        float ColSizeX = m_boxColl.size.x;
+        float ColSizeY = m_boxColl.size.y;
+
+        // Calcul a clipping compared to Center groundcheck
+        float Offset = 0.2f;
+        Vector3 DecalPos = new Vector3(0, ColSizeY * 0.5f - Offset, 0);
+        Vector3 DecalNeg = new Vector3(0, ColSizeY * -0.5f + Offset, 0);
+
+        Vector3 StartPoint = new Vector3();
+        if (!m_FacingRight)
+        {
+            StartPoint = new Vector3(ColSizeX * 0.5f, ColSizeY * 0.5f) + transform.position;
+        }
+
+        else
+        {
+            StartPoint = new Vector3(-ColSizeX * 0.5f, ColSizeY * 0.5f) + transform.position;
+        }
+
+        IsWallTouchMiddle = Physics2D.Linecast(StartPoint, m_LeftWallCheck.position, m_GroundLayer);
+        IsWallTouchTop = Physics2D.Linecast(StartPoint + DecalPos, m_LeftWallCheck.position, m_GroundLayer);
+        IsWallTouchBottom = Physics2D.Linecast(StartPoint + DecalNeg, m_LeftWallCheck.position, m_GroundLayer);
+
+        // --- Display lines on scene
+        //Debug.DrawLine(StartPoint, m_LeftWallCheck.position);
+        //Debug.DrawLine(StartPoint + DecalPos, m_LeftWallCheck.position + DecalPos);
+        //Debug.DrawLine(StartPoint + DecalNeg, m_LeftWallCheck.position + DecalNeg);
+
+        return (IsWallTouchMiddle || IsWallTouchTop || IsWallTouchBottom);
+    }
+
+    bool CheckWallTouchRight()
+    {
+        bool IsWallTouchMiddle;
+        bool IsWallTouchTop;
+        bool IsWallTouchBottom;
+
+        float ColSizeX = m_boxColl.size.x;
+        float ColSizeY = m_boxColl.size.y;
+
+        // Calcul a clipping compared to Center groundcheck
+        float Offset = 0.2f;
+        Vector3 DecalPos = new Vector3(0, ColSizeY * 0.5f - Offset, 0);
+        Vector3 DecalNeg = new Vector3(0, ColSizeY * -0.5f + Offset, 0);
+
+        Vector3 StartPoint = new Vector3();
+        if (!m_FacingRight)
+        {
+            StartPoint = new Vector3(-ColSizeX * 0.5f, ColSizeY * 0.5f) + transform.position;
+        }
+
+        else
+        {
+            StartPoint = new Vector3(ColSizeX * 0.5f, ColSizeY * 0.5f) + transform.position;
+        }
+
+        IsWallTouchMiddle = Physics2D.Linecast(StartPoint, m_RightWallCheck.position, m_GroundLayer);
+        IsWallTouchTop = Physics2D.Linecast(StartPoint + DecalPos, m_RightWallCheck.position, m_GroundLayer);
+        IsWallTouchBottom = Physics2D.Linecast(StartPoint + DecalNeg, m_RightWallCheck.position, m_GroundLayer);
+
+        // --- Display lines on scene
+        //Debug.DrawLine(StartPoint, m_RightWallCheck.position);
+        //Debug.DrawLine(StartPoint + DecalPos, m_RightWallCheck.position + DecalPos);
+        //Debug.DrawLine(StartPoint + DecalNeg, m_RightWallCheck.position + DecalNeg);
+
+        return (IsWallTouchMiddle || IsWallTouchTop || IsWallTouchBottom);
     }
 
     bool CheckDirection()
@@ -366,6 +483,7 @@ public class CharacterBehaviour : MonoBehaviour
     {
         m_Pv = NbPv;
     }
+
 
     #endregion
 

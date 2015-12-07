@@ -20,6 +20,7 @@ public class EnemyBehaviour : MonoBehaviour {
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            // Player loose 1PV
             m_character.AddPV(-1);
 
             Vector2 centerColl = collision.collider.bounds.center;
@@ -30,9 +31,11 @@ public class EnemyBehaviour : MonoBehaviour {
             ContactPoint2D[] Contacts = collision.contacts;
             foreach (ContactPoint2D cp in Contacts)
             {
-                Debug.Log(cp.point.x);
+                Debug.Log("Contact point : "+cp.point.x);
+                Debug.Log("Character position on X : "+ m_characterPosition.x);
+                Debug.Log("Magnitude :" + cp.point.magnitude);
 
-                if (cp.point.x > centerColl.x)
+                if (cp.point.x > m_characterPosition.x)
                 {
                     // Collision is on the right side
                     m_characterPosition = new Vector2(CollPosX + 1f, CollPosY);
@@ -55,10 +58,12 @@ public class EnemyBehaviour : MonoBehaviour {
                     // Collision is on the bottom side
                     m_characterPosition = new Vector2(CollPosX, CollPosY - 1f);
                 }
-                
+
             }
         }
     }
+
+
     #endregion
 
     #region Private properties

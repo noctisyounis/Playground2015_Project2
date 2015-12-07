@@ -18,6 +18,8 @@ public class BlockBehaviour : MonoBehaviour
     {
         m_rgbd2d = GetComponent<Rigidbody2D>();
         m_initialPosition = transform.position;
+        m_player = GameObject.FindGameObjectWithTag("Player");
+        m_characterRGBD = m_player.GetComponent<Rigidbody2D>();
 
         if (gameObject.CompareTag("Destructible"))
         {
@@ -62,6 +64,10 @@ public class BlockBehaviour : MonoBehaviour
         }
     }
 
+
+
+
+
     IEnumerator DestroyBlock()
     {
         m_animDestruct.enabled = true;          // Enable animator
@@ -97,6 +103,8 @@ public class BlockBehaviour : MonoBehaviour
     Animator m_animDestruct;
     ParticleSystem m_particleSystem;
     Collider2D m_boxColl;
+    GameObject m_player;
+    Rigidbody2D m_characterRGBD;
     #endregion
 
 }
