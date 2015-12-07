@@ -60,6 +60,7 @@ public class CharacterBehaviour : MonoBehaviour
         m_IsVulnerable = true;
         m_IsShooting = false;
         m_RendList = gameObject.GetComponentsInChildren<SpriteRenderer>(true);
+        m_Sound = GetComponent<CharacterSound>();
     }
     
     void FixedUpdate()
@@ -141,6 +142,9 @@ public class CharacterBehaviour : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Z))
         {
+            Debug.Log(m_Sound);
+            m_Sound.PlayJumpSound();
+
             Vector2 AddJumpForce = new Vector2(Mathf.Clamp(m_rgbd.velocity.x,-4f,4f), m_JumpForce);
             m_rgbd.AddForce(AddJumpForce);
         }
@@ -160,6 +164,16 @@ public class CharacterBehaviour : MonoBehaviour
 
             // Adapt prefab type and intantiate the wave
             string PrefabName = (m_SelectedAmmo == Ammo.DestroyWave) ? "DestroyWavePrefab" : "PushWavePrefab";
+
+            if (PrefabName == "PushWavePrefab")
+            {
+                m_Sound.PlayPushShootSound();
+            }
+            else
+            {
+                m_Sound.PlayDestroyShootSound();
+            }
+
             GameObject WavePrefab = (GameObject)Instantiate(Resources.Load("prefabs/Character/" + PrefabName));
 
             // If the character is looking in the other direction
@@ -374,6 +388,8 @@ public class CharacterBehaviour : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl))
         {
+            m_Sound.PlaySwitchAmmoSound();
+
             if (m_SelectedAmmo == Ammo.DestroyWave)
             {
                 m_SelectedAmmo = Ammo.PushWave;
@@ -395,6 +411,7 @@ public class CharacterBehaviour : MonoBehaviour
 
     public void AddPV(int value)
     {
+        // When player wins a life point
         if (value >= 0)
         {
             if (m_Pv + value > m_MaxPV)
@@ -410,6 +427,8 @@ public class CharacterBehaviour : MonoBehaviour
 
         else if (m_IsVulnerable)
         {
+            // When player is hurt !!
+            m_Sound.PlayHurtSound();
             StartCoroutine(SetInvulnerable());
 
             if (m_Pv + value <= 0)
@@ -509,6 +528,7 @@ public class CharacterBehaviour : MonoBehaviour
     bool m_stateChanged = true;
     PlayerState m_previousState;
     int m_Pv;
+    CharacterSound m_Sound;
     #endregion
 
 
