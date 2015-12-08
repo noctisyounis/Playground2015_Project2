@@ -6,13 +6,22 @@ using System.Collections;
 
 public class GramoPieceBehaviour : MonoBehaviour 
 {
-	// GramoPieceBehaviour manage gramophone pieces behaviour when collected.
+    // GramoPieceBehaviour manage gramophone pieces behaviour when collected.
 
+    #region Private properties
+    public AudioSource m_Sound;
+    public AudioClip m_GramoGrabSound;
 
-	#region main methods
+    #endregion
 
-	void Start () 
+    #region main methods
+
+    void Start () 
 		{
+        m_Sound = GetComponent<AudioSource>();
+        m_Sound.clip = m_GramoGrabSound;
+
+
 			// Sprite initialization
 			Sprite[] spritesCollected = Resources.LoadAll<Sprite>("Sprites/GameplayElements/GramophonePiecesCollected");
 			spriteCollected = spritesCollected[(int)getGramoIndex()];
@@ -32,6 +41,8 @@ public class GramoPieceBehaviour : MonoBehaviour
 		{
 			if (other.gameObject.CompareTag ("Player") && !isCollected()) 
 			{
+                m_Sound.Play();
+
 				GameObject gameManager = GameObject.FindGameObjectWithTag("GameManager");
 				gameManager.GetComponent<GramoManager>().collectGramo(getGramoIndex());	
 				setCollected(true);		
