@@ -6,12 +6,14 @@ public class CharacterBehaviour : MonoBehaviour
 
     //      TODO :
 
+    //      Piston (scale one part) length = 3
+
     //      End level music when game over
     //      End level animation
     //      End level music
     //      Door animation
 
-    //      Piston (scale one part) length = 3
+
 
     //      (Desactive rub on sides)
     //      (Player rebound when hurts)

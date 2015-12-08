@@ -14,9 +14,9 @@ public class SoundLevelController : MonoBehaviour
         m_gameManag = GameObject.FindGameObjectWithTag("GameManager");
 
         m_gramoManag = m_gameManag.GetComponent<GramoManager>();
-        Debug.Log(m_gramoManag);
+
         m_dustManag = m_gameManag.GetComponent<DustManager>();
-        Debug.Log(m_dustManag);
+
 
         m_HighPassFilter = m_AudioSource1.GetComponent<AudioHighPassFilter>();
         m_HighPassFilter.cutoffFrequency = 600;
@@ -62,7 +62,6 @@ public class SoundLevelController : MonoBehaviour
 
         m_TotalCount = MaxGramoNb + MaxDustNb;
 
-        Debug.Log(m_TotalCount);
     }
 
     void SetGrabbedCount()
@@ -72,7 +71,6 @@ public class SoundLevelController : MonoBehaviour
 
         m_GrabbedCount = GrabbedDustNb + GrabbedGramoNb;
 
-        Debug.Log(m_GrabbedCount);
     }
 
     #region Private properties
