@@ -11,6 +11,9 @@ public class BlockBehaviour : MonoBehaviour
     public float m_shakeIntensity;
     [Range(8000f,14000f)]
     public float m_forceMove;
+    public AudioClip m_bumpSound;
+    public AudioClip m_breakSound;
+    public AudioClip m_moveSound;
     #endregion
 
     #region Main methods
@@ -20,6 +23,8 @@ public class BlockBehaviour : MonoBehaviour
         m_initialPosition = transform.position;
         m_player = GameObject.FindGameObjectWithTag("Player");
         m_characterRGBD = m_player.GetComponent<Rigidbody2D>();
+        m_BlockSound = GetComponent<AudioSource>();
+        m_BlockSound.loop = false;
 
         if (gameObject.CompareTag("Destructible"))
         {
@@ -37,6 +42,7 @@ public class BlockBehaviour : MonoBehaviour
         if (gameObject.CompareTag("Pushable") && other.gameObject.CompareTag("PushWave"))
         {
             float OtherVeloX = other.GetComponent<Rigidbody2D>().velocity.x;
+            PlayMoveSound();
 
             // Check direction and apply move forces
             if (OtherVeloX > 0)
@@ -70,6 +76,8 @@ public class BlockBehaviour : MonoBehaviour
 
     IEnumerator DestroyBlock()
     {
+        PlayBreakSound();
+
         m_animDestruct.enabled = true;          // Enable animator
         m_particleSystem.Play();                // Start particle effect
         m_boxColl.enabled = false;              // Disable collider (don't stop the player)
@@ -79,6 +87,9 @@ public class BlockBehaviour : MonoBehaviour
 
     IEnumerator Shake()
     {
+
+        PlayBumpSound();
+
         m_initialPosition = transform.position;
         float m_initialShakeIntensity = m_shakeIntensity;
 
@@ -95,6 +106,26 @@ public class BlockBehaviour : MonoBehaviour
             m_shakeIntensity = m_initialShakeIntensity;
         }
     }
+
+
+    void PlayBumpSound()
+    {
+        m_BlockSound.clip = m_bumpSound;
+        m_BlockSound.volume = 0.5f;
+        m_BlockSound.Play(); 
+    }
+
+    void PlayBreakSound()
+    {
+        m_BlockSound.clip = m_breakSound;
+        m_BlockSound.Play();
+    }
+
+    void PlayMoveSound()
+    {
+        m_BlockSound.clip = m_moveSound;
+        m_BlockSound.Play();
+    }
     #endregion
 
     #region Private properties
@@ -105,6 +136,7 @@ public class BlockBehaviour : MonoBehaviour
     Collider2D m_boxColl;
     GameObject m_player;
     Rigidbody2D m_characterRGBD;
+    AudioSource m_BlockSound;
     #endregion
 
 }

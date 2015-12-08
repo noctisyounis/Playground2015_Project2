@@ -5,13 +5,17 @@ public class CharacterBehaviour : MonoBehaviour
 {
 
     //      TODO :
-    //      Desactive rub on sides
+
+    //      End level music when game over
     //      End level animation
+    //      End level music
     //      Door animation
-    //      Sound menu
-    //      Sound effects (shoot x 2, jump?)
-    //      Camera ?
-    //      LifeNote => like a dust baby !
+
+    //      Piston (scale one part) length = 3
+
+    //      (Desactive rub on sides)
+    //      (Player rebound when hurts)
+    //      (Sound menu)
 
 
     #region Public properties
@@ -40,10 +44,11 @@ public class CharacterBehaviour : MonoBehaviour
 
     public enum PlayerState
     {
-        Idle,
-        Walk,
+        Idle ,
+        Walk ,
         Jump ,
-        Shoot
+        Shoot ,
+        Dead
     }
     #endregion
 
@@ -57,6 +62,7 @@ public class CharacterBehaviour : MonoBehaviour
         m_Animator = GetComponentInChildren<Animator>();
         m_SelectedAmmo = Ammo.PushWave;
         m_Pv = 3;
+        m_MaxPV = 3;
         m_IsVulnerable = true;
         m_IsShooting = false;
         m_RendList = gameObject.GetComponentsInChildren<SpriteRenderer>(true);
@@ -65,6 +71,8 @@ public class CharacterBehaviour : MonoBehaviour
     
     void FixedUpdate()
     {
+        m_CurrentPosition = transform.position;
+
         switch (m_playerState)
         {
             case PlayerState.Idle :
@@ -74,6 +82,7 @@ public class CharacterBehaviour : MonoBehaviour
                 m_stateChanged = false;
                 m_boxColl.sharedMaterial.friction = m_initialFriction;
                 StartCoroutine(Shoot());
+                SwitchAmmo();
                 ChangeState();
                 break;
 
@@ -84,6 +93,7 @@ public class CharacterBehaviour : MonoBehaviour
                 m_Animator.Play("Walk");
                 m_stateChanged = false;
                 m_boxColl.sharedMaterial.friction = m_initialFriction;
+                SwitchAmmo();
                 ChangeState();
                 break;
 
@@ -91,7 +101,8 @@ public class CharacterBehaviour : MonoBehaviour
                 ApplyGravity();
                 Move();
                 m_boxColl.sharedMaterial.friction = 0;      // Disable friction
-                m_Animator.Play("Jump");               
+                m_Animator.Play("Jump");
+                SwitchAmmo();
                 ChangeState();
                 break;
 
@@ -101,14 +112,15 @@ public class CharacterBehaviour : MonoBehaviour
                 ChangeState();
                 break;
 
+            case PlayerState.Dead :
+                m_Animator.Play("Fail");
+                break;
+
             default:
                 break;
         }
 
-        SwitchAmmo();
-
-        m_CurrentPosition = transform.position;
-
+        
         CheckCeiling();
         CheckWallTouchLeft();
         CheckWallTouchRight();      
@@ -414,6 +426,8 @@ public class CharacterBehaviour : MonoBehaviour
         // When player wins a life point
         if (value >= 0)
         {
+            m_Sound.PlayLifeUpSound();
+
             if (m_Pv + value > m_MaxPV)
             {
                 m_Pv = m_MaxPV;
@@ -425,21 +439,23 @@ public class CharacterBehaviour : MonoBehaviour
             }
         }
 
-        else if (m_IsVulnerable)
+        else if (value < 0 && m_IsVulnerable)
         {
-            // When player is hurt !!
-            m_Sound.PlayHurtSound();
-            StartCoroutine(SetInvulnerable());
 
             if (m_Pv + value <= 0)
             {
                 m_Pv = 0;
+
                 StartCoroutine(Death());
             }
 
             else
             {
-                m_Pv += value;
+                // When player is hurt !!
+                m_Sound.PlayHurtSound();
+
+                StartCoroutine(SetInvulnerable());
+                m_Pv += value;     
             }
         }
     }
@@ -475,10 +491,14 @@ public class CharacterBehaviour : MonoBehaviour
 
     IEnumerator Death()
     {
+        // Necessary delay to display all level and interface elements while character's death
         yield return new WaitForSeconds(0.1f);
-        Destroy(gameObject);
 
-        // Respawn ..
+        // When character die, his state change and the player loose all the controls and interactions
+        m_playerState = PlayerState.Dead;
+        m_Sound.PlayDeathSound();
+
+        // TODO Respawn ..
     }
 
     public string GetAmmo()
@@ -507,10 +527,12 @@ public class CharacterBehaviour : MonoBehaviour
     #endregion
 
     #region Tools
-    //void OnGUI()
-    //{
-    //    GUILayout.Button("State : " + m_playerState + "" + "\n" + " Axis " + Input.GetAxisRaw("Horizontal") + "\n" + "x: " + m_rgbd.velocity.x + " \n y:" + m_rgbd.velocity.y);
-    //}
+    void OnGUI()
+    {
+        // GUILayout.Button("State : " + m_playerState + "" + "\n" + " Axis " + Input.GetAxisRaw("Horizontal") + "\n" + "x: " + m_rgbd.velocity.x + " \n y:" + m_rgbd.velocity.y);
+
+        // GUILayout.Button("State : " + m_playerState + "\n" +"PV : "+m_Pv);
+    }
     #endregion
 
     #region Private properties
@@ -529,6 +551,7 @@ public class CharacterBehaviour : MonoBehaviour
     PlayerState m_previousState;
     int m_Pv;
     CharacterSound m_Sound;
+    
     #endregion
 
 
