@@ -11,18 +11,20 @@ public class GramoPieceBehaviour : MonoBehaviour
 
 	#region main methods
 
-		void Start () 
+	void Start () 
 		{
-			// Material initialization
-			colorCollected = (Material)Resources.Load("Materials/Level/darkPurple_Test");
-			colorUncollected = (Material)Resources.Load("Materials/Level/lightPurple_Test");
+			// Sprite initialization
+			Sprite[] spritesCollected = Resources.LoadAll<Sprite>("Sprites/GameplayElements/GramophonePiecesCollected");
+			spriteCollected = spritesCollected[(int)getGramoIndex()];
+			Sprite[] spritesUncollected = Resources.LoadAll<Sprite>("Sprites/GameplayElements/GramophonePiecesUncollected");
+			spriteUncollected = spritesUncollected[(int)getGramoIndex()];
 			if (isCollected ()) 
 			{
-				GetComponent<Renderer> ().material = colorCollected;
+				GetComponent<SpriteRenderer> ().sprite = spriteCollected;
 			} 
 			else 
 			{
-				GetComponent<Renderer> ().material = colorUncollected;
+				GetComponent<SpriteRenderer> ().sprite = spriteUncollected;
 			}
 		}
 		
@@ -33,7 +35,7 @@ public class GramoPieceBehaviour : MonoBehaviour
 				GameObject gameManager = GameObject.FindGameObjectWithTag("GameManager");
 				gameManager.GetComponent<GramoManager>().collectGramo(getGramoIndex());	
 				setCollected(true);		
-				GetComponent<Renderer>().material = colorCollected;			
+				GetComponent<SpriteRenderer> ().sprite = spriteCollected;		
 			}
 		}
 
@@ -72,8 +74,8 @@ public class GramoPieceBehaviour : MonoBehaviour
 		private float gramoIndex;
 		private bool collected;
 	
-		private Material colorCollected;				// Only for test to simulate the collected icon.	
-		private Material colorUncollected;				// Only for test to simulate the uncollected icon.
+		private Sprite spriteCollected;
+		private Sprite spriteUncollected;
 
 	#endregion
 

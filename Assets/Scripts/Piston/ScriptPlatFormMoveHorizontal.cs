@@ -3,12 +3,14 @@ using System.Collections;
 
 public class ScriptPlatFormMoveHorizontal : MonoBehaviour {
 
-	public string m_plateFormName;
-	public float m_interSecondePlatForm; 
-	public float m_posX; // the point (m_posX,m_pos) will move to the right first
-	public float m_posY;
+    [Range(0.001f,0.500f)]
+    public float m_speedPlatForm;
+
+    public float m_interSecondePlatForm; 
+	float m_posX; // the point (m_posX,m_pos) will move to the right first
+	float m_posY;
 	
-	private GameObject  tempPlatForm ;
+
 	private float positionX;
 	private float positionY;
 		
@@ -16,24 +18,33 @@ public class ScriptPlatFormMoveHorizontal : MonoBehaviour {
 	
 	private enum statePistonArray {PlatformRight,PlatformLeft,PlatformPause };
 	private statePistonArray platformState;
-	private const float speedPlatForm=0.1f;
+
 	private float DistancePlateForm = 2.0f;
 	private float posX2;
 	
 
 	void Start () 
-	{	positionX = m_posX;
+	{
+        m_posX = transform.position.x;
+        m_posY = transform.position.y;
+
+
+        positionX = m_posX;
 		positionY = m_posY;
+
 		posX2 = m_posX + DistancePlateForm;
 		
-		m_interSecondePlatForm = m_interSecondePlatForm*60; 
 		
 		platformState = statePistonArray.PlatformRight;
-		tempPlatForm = GameObject.Find(m_plateFormName);
-		tempPlatForm.transform.position = new Vector3(positionX,positionY, 0);
-	
-	//	timeCompter = 0;
-	}
+		
+		transform.position = new Vector3(positionX,positionY, 0);
+
+
+
+
+
+        //	timeCompter = 0;
+    }
 	
 	
 	void FixedUpdate () 
@@ -60,11 +71,11 @@ public class ScriptPlatFormMoveHorizontal : MonoBehaviour {
 		
 		if ( (platformState==statePistonArray.PlatformRight) )// && (count%15)==0)
 		{	
-			tempPlatForm.transform.position = new Vector3(positionX,positionY, 0);
-			positionX +=speedPlatForm;
+			transform.position = new Vector3(positionX,positionY, 0);
+			positionX += m_speedPlatForm;
 			
 			
-			if (tempPlatForm.transform.position.x> posX2)
+			if (transform.position.x> posX2)
 			{
 				platformState = statePistonArray.PlatformLeft;
 			}
@@ -73,10 +84,10 @@ public class ScriptPlatFormMoveHorizontal : MonoBehaviour {
 		
 		if ( (platformState==statePistonArray.PlatformLeft) ) //&& (count%15)==0)
 		{	
-			tempPlatForm.transform.position = new Vector3(positionX,positionY , 0);
-			positionX -=speedPlatForm;
+			transform.position = new Vector3(positionX,positionY , 0);
+			positionX -= m_speedPlatForm;
 			
-			if ( tempPlatForm.transform.position.x < m_posX)
+			if ( transform.position.x < m_posX)
 			{	platformState = statePistonArray.PlatformRight;
 			}
 			
