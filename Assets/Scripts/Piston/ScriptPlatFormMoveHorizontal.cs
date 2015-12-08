@@ -19,7 +19,7 @@ public class ScriptPlatFormMoveHorizontal : MonoBehaviour {
 	private enum statePistonArray {PlatformRight,PlatformLeft,PlatformPause };
 	private statePistonArray platformState;
 
-	private float DistancePlateForm = 2.0f;
+	private float DistancePlateForm = 8.0f;
 	private float posX2;
 	
 
