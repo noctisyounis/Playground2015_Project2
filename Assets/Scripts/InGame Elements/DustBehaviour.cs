@@ -11,7 +11,9 @@ public class DustBehaviour : MonoBehaviour
 
 
     #region public properties
+    public AudioSource m_AudioSource;
     public AudioClip m_DustGrabSound;
+    
     #endregion
 
 
@@ -19,12 +21,7 @@ public class DustBehaviour : MonoBehaviour
 
     void Start () 
 		{
-
-
-
-        m_Sound.clip = m_DustGrabSound;
-
-    
+        m_AudioSource.clip = m_DustGrabSound;
             
 		}
 		
@@ -33,7 +30,7 @@ public class DustBehaviour : MonoBehaviour
 			if ((other.gameObject.CompareTag ("Player") || other.gameObject.CompareTag ("DestroyWave")) && !isCollected()) 
 			{
 
-            m_Sound.Play();
+            m_AudioSource.Play();
 
 				GetComponent<SpriteRenderer>().enabled = false;
 				GameObject gameManager = GameObject.FindGameObjectWithTag("GameManager");
@@ -82,8 +79,7 @@ public class DustBehaviour : MonoBehaviour
 		private Sprite spriteCollected;
 		private Sprite spriteUncollected;
 
-
-    public AudioSource m_Sound;
+  
 
     #endregion
 
